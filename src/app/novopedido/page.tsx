@@ -1,18 +1,8 @@
 "use client";
-import { Button } from "@/components/ui/button"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { ItensAcai, obterItensDeAcai } from "@/lib/repos/acai";
+import { ItemDb, ItensAcai } from "@/lib/repos/acai";
 import { useEffect, useState } from "react"
 
-export type Acompanhamento = {
+export type Item = {
     id: string,
     nome: string,
     preco: number
@@ -20,9 +10,14 @@ export type Acompanhamento = {
 
 
 export default function novopedido() {
-    const [acompanhamentos, setAcompanhamentos] = useState<Acompanhamento[]>([])
+
+    const [adicionais, setAdicionais] = useState<Item[]>([])
     const [valorCopo, setValorCopo] = useState<number>(0);
-    const [itensAcai, setItensAcai] = useState<ItensAcai>()
+    const [itensAcai, setItensAcai] = useState<ItensAcai>({ acompanhamentos: [], cremes: [], frutas: [], tamanhosDeCopo: [] })
+
+    function IncluirAdicional(adicional: Item) {
+        setAdicionais([...adicionais, adicional])
+    }
 
     function fetchData() {
         return fetch('api/acai/itens')
@@ -39,13 +34,11 @@ export default function novopedido() {
         fetchData()
     }, [])
 
-    function AdicionarAcompanhamento({ id, nome, preco }: Acompanhamento) {
-        setAcompanhamentos([...acompanhamentos, { id, nome, preco }])
-    }
+
 
     function ObterTotal(): number {
         let total = 0;
-        acompanhamentos.map(x => { total += x.preco })
+        adicionais.map(x => { total += x.preco })
         return total + valorCopo
     }
 
@@ -72,26 +65,24 @@ export default function novopedido() {
                 <div id="Adicionais">
                     <p className="text-xl">Acompanhamentos</p>
 
-                    {acompanhamentos && acompanhamentos.map(x => (
+                    {adicionais && adicionais.map(x => (
                         <div className="flex flex-row gap-2">
                             <p>{x.nome}</p>
                             <p>R$:{x.preco.toFixed(2)}</p>
                         </div>
                     ))}
 
-                    {!acompanhamentos.length && (<p>Nenhum</p>)}
+                    {!adicionais.length && (<p>Nenhum</p>)}
 
                     <div>
                         <p className="mt-10">Adicionar</p>
-                        {
-                            itensAcai && itensAcai.acompanhamentos.map(x => (
-                                <button
-                                    key={x.id}
-                                    onClick={() => AdicionarAcompanhamento({ id: x.id, nome: x.nome, preco: Number(x.preco) })}
-                                    className="p-2 border hover:bg-green-200"
-                                >{x.nome}</button>
-                            ))
-                        }
+
+                        <div className="flex flex-row w-full gap-2">
+                            <ListaAdicional categoria="Acompanhamentos" listaAdicional={itensAcai.acompanhamentos} onClick={IncluirAdicional} />
+                            <ListaAdicional categoria="Cremes" listaAdicional={itensAcai.cremes} onClick={IncluirAdicional} />
+                            <ListaAdicional categoria="Frutas" listaAdicional={itensAcai.frutas} onClick={IncluirAdicional} />
+                        </div>
+
                     </div>
                 </div>
 
@@ -101,6 +92,33 @@ export default function novopedido() {
                     Total: R$: {ObterTotal().toFixed(2)}
                 </div>
 
+            </div>
+        </div>
+    )
+}
+
+interface ListaAdiconalProps {
+    listaAdicional: ItemDb[],
+    categoria: string,
+    onClick: (adicional: Item) => void
+}
+
+export function ListaAdicional({ categoria, listaAdicional, onClick }: ListaAdiconalProps) {
+    return (
+        <div className="p-2 border w-full rounded-lg">
+            <p className="pb-2">{categoria}</p>
+            <div>
+                {
+                    listaAdicional.length && listaAdicional.map(item => (
+                        <div
+                            className="flex flex-row justify-between gap-2 p-2 border hover:bg-green-200"
+                            onClick={() => onClick({ id: item.id, nome: item.nome, preco: Number(item.preco) })}
+                        >
+                            <p>{item.nome}</p>
+                            <p>R$ {Number(item.preco).toFixed(2)}</p>
+                        </div>
+                    ))
+                }
             </div>
         </div>
     )

@@ -1,16 +1,16 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { db } from "../utils/db";
 
-type Item = {
+export type ItemDb = {
     id: string,
     nome: string,
     preco: Decimal
 }
 
 export type ItensAcai = {
-    acompanhamentos: Item[],
-    cremes: Item[],
-    frutas: Item[],
+    acompanhamentos: ItemDb[],
+    cremes: ItemDb[],
+    frutas: ItemDb[],
     tamanhosDeCopo: TamanhoCopo[]
 }
 
