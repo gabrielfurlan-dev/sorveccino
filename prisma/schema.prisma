@@ -6,3 +6,27 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Acompanhamentos {
+  id    String  @id @default(uuid())
+  nome  String
+  preco Decimal
+}
+
+model Frutas {
+  id    String  @id @default(uuid())
+  nome  String
+  preco Decimal
+}
+
+model Cremes {
+  id    String  @id @default(uuid())
+  nome  String
+  preco Decimal
+}
+
+model TamanhoCoposAcai {
+  id      String  @id @default(uuid())
+  tamanho String
+  preco   Decimal
+}
