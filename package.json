@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    },
   "dependencies": {
     "@prisma/client": "5.14.0",
     "@radix-ui/react-select": "^2.0.0",

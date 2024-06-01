@@ -25,10 +25,10 @@ export default function novopedido() {
     const [itensAcai, setItensAcai] = useState<ItensAcai>()
 
     function fetchData() {
-        return fetch('/acai/itens')
+        return fetch('api/acai/itens')
             .then(response => response.json())
             .then(data => {
-                setItensAcai(data.json() as ItensAcai)
+                setItensAcai(data.itensAcai as ItensAcai)
             })
             .catch(error => {
                 alert(error)
