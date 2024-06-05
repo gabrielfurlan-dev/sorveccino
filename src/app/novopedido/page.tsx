@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { ItemDb, ItensAcai } from "@/lib/repos/acai";
 import { useEffect, useState } from "react"
 
@@ -34,12 +35,14 @@ export default function novopedido() {
         fetchData()
     }, [])
 
-
-
     function ObterTotal(): number {
         let total = 0;
         adicionais.map(x => { total += x.preco })
         return total + valorCopo
+    }
+
+    function AdicionarPedidoAcai(){
+        
     }
 
     return (
@@ -91,7 +94,7 @@ export default function novopedido() {
                 <div id="Totalizadores">
                     Total: R$: {ObterTotal().toFixed(2)}
                 </div>
-
+                <Button onClick={() => AdicionarPedidoAcai()}>Salvar</Button>
             </div>
         </div>
     )
@@ -111,7 +114,7 @@ export function ListaAdicional({ categoria, listaAdicional, onClick }: ListaAdic
                 {
                     listaAdicional.length && listaAdicional.map(item => (
                         <div
-                            className="flex flex-row justify-between gap-2 p-2 border hover:bg-green-200"
+                            className="py-2 rounded-lg flex flex-row justify-between gap-2 p-2 border hover:bg-green-200"
                             onClick={() => onClick({ id: item.id, nome: item.nome, preco: Number(item.preco) })}
                         >
                             <p>{item.nome}</p>

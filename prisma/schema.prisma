@@ -26,7 +26,40 @@ model Cremes {
 }
 
 model TamanhoCoposAcai {
-  id      String  @id @default(uuid())
-  tamanho String
-  preco   Decimal
+  id         String       @id @default(uuid())
+  tamanho    String
+  preco      Decimal
+  PedidoAcai PedidoAcai[]
+}
+
+model Item {
+  id    String  @id @default(uuid())
+  nome  String
+  preco Decimal
+
+  PedidoAcai   PedidoAcai? @relation(fields: [pedidoAcaiId], references: [id])
+  pedidoAcaiId String?
+}
+
+model PedidoAcai {
+  id                 String           @id @default(uuid())
+  itens              Item[]
+  tamanhoCopo        TamanhoCoposAcai @relation(fields: [tamanhoCoposAcaiId], references: [id])
+  cobrarTaxaEntrega  Boolean
+  tamanhoCoposAcaiId String
+}
+
+model Cliente {
+  id         String   @id @default(uuid())
+  endereco   Endereco @relation(fields: [enderecoId], references: [id])
+  enderecoId String
+}
+
+model Endereco {
+  id                String    @id @default(uuid())
+  logradouro        String
+  numero            String
+  bairro            String
+  pontoDeReferencia String
+  Cliente           Cliente[]
 }
