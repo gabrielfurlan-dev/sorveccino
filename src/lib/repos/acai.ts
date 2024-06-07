@@ -66,21 +66,21 @@ export type adicionarPedidoAcaiProps = {
 
 export async function AdicionarPedidoAcai({ adicionais, tamanhoCopoId, cobrarTaxaEntrega }: adicionarPedidoAcaiProps): Promise<void> {
 
-    const adicionaisInseridos = adicionais.map(async (x) => {
-        return await db.item.create({
-            data: {
-                nome: x.nome,
-                id: x.id,
-                preco: x.preco
-            }
-        })
-    })
+    // const adicionaisInseridos = adicionais.map(async (x) => {
+    //     return await db.item.create({
+    //         data: {
+    //             nome: x.nome,
+    //             id: x.id,
+    //             preco: x.preco
+    //         }
+    //     })
+    // })
 
-    await db.pedidoAcai.create({
-        data: {
-            itens: ,
-            cobrarTaxaEntrega,
-            tamanhoCoposAcaiId: tamanhoCopoId
-        }
-    })
+    // await db.pedidoAcai.create({
+    //     data: {
+    //         itens: ,
+    //         cobrarTaxaEntrega,
+    //         tamanhoCoposAcaiId: tamanhoCopoId
+    //     }
+    // })
 }
