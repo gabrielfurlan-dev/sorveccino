@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ItemDb, ItensAcai } from "@/lib/repos/acai";
 import { useEffect, useState } from "react"
 
@@ -8,12 +10,11 @@ export type Item = {
     preco: number
 }
 
-
 export default function novopedido() {
 
+    const [itensAcai, setItensAcai] = useState<ItensAcai>({ acompanhamentos: [], cremes: [], frutas: [], tamanhosDeCopo: [] })
     const [adicionais, setAdicionais] = useState<Item[]>([])
     const [valorCopo, setValorCopo] = useState<number>(0);
-    const [itensAcai, setItensAcai] = useState<ItensAcai>({ acompanhamentos: [], cremes: [], frutas: [], tamanhosDeCopo: [] })
 
     function IncluirAdicional(adicional: Item) {
         setAdicionais([...adicionais, adicional])
@@ -34,8 +35,6 @@ export default function novopedido() {
         fetchData()
     }, [])
 
-
-
     function ObterTotal(): number {
         let total = 0;
         adicionais.map(x => { total += x.preco })
@@ -49,19 +48,23 @@ export default function novopedido() {
             <div className="grid gap-10">
                 <div id="Tamanho Copo">
                     <p>Tamanho Copo</p>
-                    <select name="" id="" onChange={(e) => setValorCopo(Number(e.target.value))}>
-                        {
-                            itensAcai && itensAcai.tamanhosDeCopo.map(x => (
-                                <option id={x.id} value={Number(x.preco)}>
-                                    {x.tamanho} | {Number(x.preco)}
-                                </option>
-                            ))
-                        }
-                    </select>
+                    <Select onValueChange={(e) => setValorCopo(Number(e))}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Selecione um tamanho" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel>Tamanhos</SelectLabel>
+                                {
+                                    itensAcai && itensAcai.tamanhosDeCopo.map(x => (
+                                        <SelectItem value={x.preco.toString()}>{x.tamanho} | {Number(x.preco)}</SelectItem>
+                                    ))
+                                }
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                 </div>
-
                 <hr />
-
                 <div id="Adicionais">
                     <p className="text-xl">Acompanhamentos</p>
 
@@ -71,9 +74,7 @@ export default function novopedido() {
                             <p>R$:{x.preco.toFixed(2)}</p>
                         </div>
                     ))}
-
                     {!adicionais.length && (<p>Nenhum</p>)}
-
                     <div>
                         <p className="mt-10">Adicionar</p>
 
@@ -85,13 +86,13 @@ export default function novopedido() {
 
                     </div>
                 </div>
-
                 <hr />
-
                 <div id="Totalizadores">
                     Total: R$: {ObterTotal().toFixed(2)}
                 </div>
-
+                <div>
+                    <Button>Salvar</Button>
+                </div>
             </div>
         </div>
     )
@@ -111,7 +112,7 @@ export function ListaAdicional({ categoria, listaAdicional, onClick }: ListaAdic
                 {
                     listaAdicional.length && listaAdicional.map(item => (
                         <div
-                            className="flex flex-row justify-between gap-2 p-2 border hover:bg-green-200"
+                            className="flex flex-row justify-between gap-2 p-2 border hover:bg-emerald-600"
                             onClick={() => onClick({ id: item.id, nome: item.nome, preco: Number(item.preco) })}
                         >
                             <p>{item.nome}</p>

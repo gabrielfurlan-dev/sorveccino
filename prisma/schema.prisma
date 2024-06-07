@@ -30,3 +30,19 @@ model TamanhoCoposAcai {
   tamanho String
   preco   Decimal
 }
+
+model Item {
+  id       String  @id @default(uuid())
+  nome  String
+  categoria String
+  preco    Decimal
+
+  Pedido   Pedido? @relation(fields: [pedidoId], references: [id])
+  pedidoId String?
+}
+
+model Pedido {
+  id          String @id @default(uuid())
+  nomeCliente String
+  itens       Item[]
+}

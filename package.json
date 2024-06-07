@@ -10,7 +10,7 @@
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
-    },
+  },
   "dependencies": {
     "@prisma/client": "5.14.0",
     "@radix-ui/react-select": "^2.0.0",
@@ -36,6 +36,7 @@
     "postcss": "^8",
     "prisma": "^5.14.0",
     "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
   "module": "src/index.js",
