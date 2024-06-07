@@ -1,5 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { db } from "../utils/db";
+import { Item } from "@/app/novopedido/page";
 
 export type ItemDb = {
     id: string,
@@ -55,4 +56,31 @@ export async function obterItensDeAcai(): Promise<ItensAcai> {
         frutas: frutas,
         tamanhosDeCopo: tamanhoCopos
     }
+}
+
+export type adicionarPedidoAcaiProps = {
+    tamanhoCopoId: string,
+    adicionais: Item[],
+    cobrarTaxaEntrega: boolean
+}
+
+export async function AdicionarPedidoAcai({ adicionais, tamanhoCopoId, cobrarTaxaEntrega }: adicionarPedidoAcaiProps): Promise<void> {
+
+    const adicionaisInseridos = adicionais.map(async (x) => {
+        return await db.item.create({
+            data: {
+                nome: x.nome,
+                id: x.id,
+                preco: x.preco
+            }
+        })
+    })
+
+    await db.pedidoAcai.create({
+        data: {
+            itens: ,
+            cobrarTaxaEntrega,
+            tamanhoCoposAcaiId: tamanhoCopoId
+        }
+    })
 }

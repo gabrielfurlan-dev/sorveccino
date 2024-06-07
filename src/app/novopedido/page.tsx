@@ -41,6 +41,10 @@ export default function novopedido() {
         return total + valorCopo
     }
 
+    function AdicionarPedidoAcai(){
+        
+    }
+
     return (
         <div className="p-10">
             <h1 className="text-3xl py-4">Pagina de cadastrar pedido</h1>
