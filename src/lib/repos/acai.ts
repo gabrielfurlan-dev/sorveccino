@@ -6,7 +6,7 @@ export type ItemDb = {
     id: string,
     nome: string,
     preco: Decimal
-}
+}   
 
 export type ItensAcai = {
     acompanhamentos: ItemDb[],

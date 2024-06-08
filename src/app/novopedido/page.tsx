@@ -11,7 +11,6 @@ export type Item = {
 }
 
 export default function novopedido() {
-
     const [itensAcai, setItensAcai] = useState<ItensAcai>({ acompanhamentos: [], cremes: [], frutas: [], tamanhosDeCopo: [] })
     const [adicionais, setAdicionais] = useState<Item[]>([])
     const [valorCopo, setValorCopo] = useState<number>(0);
@@ -41,15 +40,10 @@ export default function novopedido() {
         return total + valorCopo
     }
 
-    function AdicionarPedidoAcai(){
-        
-    }
-
     return (
-        <div className="p-10">
-            <h1 className="text-3xl py-4">Pagina de cadastrar pedido</h1>
-
-            <div className="grid gap-10">
+        <div className="p-10 flex flex-col items-center">
+            <h1 className="text-3xl py-4">Açaís</h1>
+            <div className="w-[800px] rounded-md grid gap-10 p-12 border">
                 <div id="Tamanho Copo">
                     <p>Tamanho Copo</p>
                     <Select onValueChange={(e) => setValorCopo(Number(e))}>
@@ -59,43 +53,38 @@ export default function novopedido() {
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Tamanhos</SelectLabel>
-                                {
-                                    itensAcai && itensAcai.tamanhosDeCopo.map(x => (
-                                        <SelectItem value={x.preco.toString()}>{x.tamanho} | {Number(x.preco)}</SelectItem>
-                                    ))
-                                }
+                                {itensAcai && itensAcai.tamanhosDeCopo.map(x => (
+                                    <SelectItem value={x.preco.toString()}>{x.tamanho} | {Number(x.preco)}</SelectItem>
+                                ))}
                             </SelectGroup>
                         </SelectContent>
                     </Select>
                 </div>
-                <hr />
-                <div id="Adicionais">
-                    <p className="text-xl">Acompanhamentos</p>
-
-                    {adicionais && adicionais.map(x => (
+                <div id="Adicionais" className="flex">
+                    <div>
+                        <p className="mt-10">Adicionar</p>
+                        <div className="flex flex-row w-full gap-2">
+                            <div className="flex flex-col">
+                                <ListaAdicional categoria="Acompanhamentos" listaAdicional={itensAcai.acompanhamentos} onClick={IncluirAdicional} />
+                                <ListaAdicional categoria="Frutas" listaAdicional={itensAcai.frutas} onClick={IncluirAdicional} />
+                            </div>
+                            <ListaAdicional categoria="Cremes" listaAdicional={itensAcai.cremes} onClick={IncluirAdicional} />
+                        </div>
+                    </div>
+                    { adicionais && adicionais.map(x => (
                         <div className="flex flex-row gap-2">
                             <p>{x.nome}</p>
                             <p>R$:{x.preco.toFixed(2)}</p>
                         </div>
-                    ))}
+                    )) }
                     {!adicionais.length && (<p>Nenhum</p>)}
-                    <div>
-                        <p className="mt-10">Adicionar</p>
-
-                        <div className="flex flex-row w-full gap-2">
-                            <ListaAdicional categoria="Acompanhamentos" listaAdicional={itensAcai.acompanhamentos} onClick={IncluirAdicional} />
-                            <ListaAdicional categoria="Cremes" listaAdicional={itensAcai.cremes} onClick={IncluirAdicional} />
-                            <ListaAdicional categoria="Frutas" listaAdicional={itensAcai.frutas} onClick={IncluirAdicional} />
-                        </div>
-
-                    </div>
                 </div>
                 <hr />
                 <div id="Totalizadores">
                     Total: R$: {ObterTotal().toFixed(2)}
                 </div>
-                <div>
-                    <Button>Salvar</Button>
+                <div id="submit" className="w-full">
+                    <Button className="w-full">Salvar</Button>
                 </div>
             </div>
         </div>
@@ -110,13 +99,13 @@ interface ListaAdiconalProps {
 
 export function ListaAdicional({ categoria, listaAdicional, onClick }: ListaAdiconalProps) {
     return (
-        <div className="p-2 border w-full rounded-lg">
+        <div className="p-2 w-full rounded-lg">
             <p className="pb-2">{categoria}</p>
             <div>
                 {
                     listaAdicional.length && listaAdicional.map(item => (
                         <div
-                            className="flex flex-row justify-between gap-2 p-2 border hover:bg-emerald-600"
+                            className="text-sm w-[265px] px-2 py-1 flex rounded flex-row justify-between gap-2 hover:border hover:border-neutral-700 hover:bg-emerald-600"
                             onClick={() => onClick({ id: item.id, nome: item.nome, preco: Number(item.preco) })}
                         >
                             <p>{item.nome}</p>
