@@ -87,7 +87,7 @@ export default function CopoAcai({ tamanhoCopo }: copoAcaiProps) {
 type colapseButtonProps = {
     isCollapsed: boolean
 }
-function ColapseButton({ isCollapsed }: colapseButtonProps) {
+export function ColapseButton({ isCollapsed }: colapseButtonProps) {
     return (
         isCollapsed ? <CaretUp size={24} /> : <CaretDown size={24} />
     )
