@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeToggle } from "@/components/sorveccino-ui/ThemeToggle";
+import React from "react";
+import Providers from "./providers";
+import { Toaster } from "@/components/ui/sonner"
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -14,23 +15,14 @@ export const metadata: Metadata = {
   description: "Made by Gabriel Furlan",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ThemeToggle />
+        <Providers>
           {children}
-        </ThemeProvider>
+          <Toaster position="top-right" richColors  />
+        </Providers>
       </body>
     </html>
   );
