@@ -1,13 +1,29 @@
+import { createId } from "@paralleldrive/cuid2"
+
 export type Pedido = {
     id?: string,
-    cliente: string,
+    nomeCliente: string,
     data: Date,
-    adicionais: Adicionais[],
-    embalagem: Embalagem[]
+    acais: Acai[],
+    cupomDesconto?: string
+}
+
+interface Acai extends Item {
+    embalagem: Embalagem,
+    adicionais?: Adicional[]
+    promocao?: Promocao,
+    onservacoes?: string,
+}
+
+type Promocao = {
+    descontoPorcentagem: number,
+    nomePromocao: string,
+    diasDaSemana: []
 }
 
 interface Embalagem extends Item {
-    adicionais: Item[]
+    nome: string,
+    categoria: string,
     tamanho: number,
     unidadeMedida: UnidadeMedida
 }
@@ -19,45 +35,44 @@ interface Item {
     preco: number
 }
 
-interface Adicionais extends Item {
-    quantidade?: number,
-    unidadeMedida: UnidadeMedida
-}
+interface Adicional extends Item { }
 
 type UnidadeMedida = 'Kg' | 'g' | 'ml' | 'L' | 'Uni'
 
 export async function obterPedidoEditado(): Promise<Pedido> {
     return {
-        cliente: 'Evylin',
+        id: createId(),
+        nomeCliente: 'Evylin',
         data: new Date(),
-        embalagem: [{
-            nome: 'Paraíso',
-            adicionais: [{
-                nome: 'Morango',
-                preco: 4,
-                quantidade: 10,
-                unidadeMedida: 'g',
-                categoria: 'Frutas'
-            },
+        acais: [
             {
-                nome: 'Creme de Ninho',
-                preco: 4,
-                quantidade: 10,
-                unidadeMedida: 'g',
-                categoria: 'Cremes'
-            }],
-            preco: 10,
-            quantidade: 10,
-            unidadeMedida: 'Kg',
-            categoria: 'Frutas'
-        }],
-        itens: [{
-            nome: 'Cereja',
-            preco: 4,
-            quantidade: 10,
-            unidadeMedida: 'g',
-            categoria: 'Frutas'
-        }]
+                id: createId(),
+                embalagem: {
+                    id: createId(),
+                    categoria: 'Copos descartáveis - Açaí',
+                    nome: 'Copo',
+                    tamanho: 300,
+                    unidadeMedida: "ml",
+                    preco: 10,
+                },
+                adicionais: [
+                    {
+                        id: createId(),
+                        nome: 'Morango',
+                        preco: 4,
+                        categoria: 'Frutas'
+                    },
+                    {
+                        id: createId(),
+                        nome: 'Creme de Ninho',
+                        preco: 4,
+                        categoria: 'Cremes'
+                    },
+                ],
+                preco: 18,
+                nome: 'acai'
+            }
+        ]
     }
 }
 
