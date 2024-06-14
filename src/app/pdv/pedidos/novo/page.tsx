@@ -1,73 +1,74 @@
 'use client'
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Adicional, Embalagem, ListaAdicionais, ListaEmbalagens } from "@/data/pedidoEditado";
+import { cn } from "@/lib/utils";
 import { Icon } from "@phosphor-icons/react/dist/lib/index";
-import { PintGlass } from "@phosphor-icons/react/dist/ssr";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ReactNode, useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react"
-import { cn } from "@/lib/utils"
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+import { Check, PintGlass, Plus } from "@phosphor-icons/react/dist/ssr";
+import { useState } from "react";
 
+interface CopoState {
+    nome: string;
+    embalagem: Embalagem | null;
+    adicionais: Adicional[];
+}
 
-const frameworks = [
-    {
-        value: "next.js",
-        label: "Next.js",
-    },
-    {
-        value: "sveltekit",
-        label: "SvelteKit",
-    },
-    {
-        value: "nuxt.js",
-        label: "Nuxt.js",
-    },
-    {
-        value: "remix",
-        label: "Remix",
-    },
-    {
-        value: "astro",
-        label: "Astro",
-    },
-]
+const copoInitialState: CopoState = {
+    nome: "",
+    embalagem: null,
+    adicionais: [],
+};
 
+export default function NovoCopo() {
+    const [copo, setCopo] = useState<CopoState>(copoInitialState);
 
-export default function novo() {
+    const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCopo((prevState) => ({
+            ...prevState,
+            nome: event.target.value,
+        }));
+    };
 
-    const [open, setOpen] = useState(false)
-    const [value, setValue] = useState("")
+    function handleEmbalagemChange(idEmbalagem: string) {
+        const selectedEmbalagem = ListaEmbalagens.find(
+            (embalagem) => embalagem.id === idEmbalagem
+        );
+        setCopo((prevState) => ({
+            ...prevState,
+            embalagem: selectedEmbalagem || null,
+        }));
+    };
+
+    function handleAdicionaisChange(idAdicional: string) {
+        const selectedAdicional = ListaAdicionais.find(
+            (adicional) => adicional.id === idAdicional
+        );
+
+        if (selectedAdicional) {
+            setCopo((prevState) => ({
+                ...prevState,
+                adicionais: [...prevState.adicionais, selectedAdicional],
+            }));
+        }
+    };
+
+    const handleAdicionarCopo = () => {
+        // Tratar o copo adicionado
+    };
 
     return (
         <div className="w-full h-[90vh] flex items-center justify-center">
             <Dialog>
                 <DialogTrigger asChild>
-                    <button>
-                        <BotaoCategoria Icon={PintGlass} tooltip="Açais" />
-                    </button>
+                    <div>
+                        <BotaoCategoria Icon={PintGlass} tooltip="Açaís" />
+                    </div>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
@@ -77,66 +78,42 @@ export default function novo() {
                         </DialogDescription>
                     </DialogHeader>
 
-                    <Campo titulo="Nome">
-                        <Input
-                            id="Nome"
-                            defaultValue="Evilin"
-                            className="col-span-3"
-                        />
-                    </Campo>
-                    <Campo titulo="Embalagem">
-                        <Popover open={open} onOpenChange={setOpen}>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    aria-expanded={open}
-                                    className="w-[200px] justify-between"
-                                >
-                                    {value
-                                        ? frameworks.find((framework) => framework.value === value)?.label
-                                        : "Select framework..."}
-                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                    <CommandInput placeholder="Search framework..." />
-                                    <CommandList>
-                                        <CommandEmpty>No framework found.</CommandEmpty>
-                                        <CommandGroup>
-                                            {frameworks.map((framework) => (
-                                                <CommandItem
-                                                    key={framework.value}
-                                                    value={framework.value}
-                                                    onSelect={(currentValue) => {
-                                                        setValue(currentValue === value ? "" : currentValue)
-                                                        setOpen(false)
-                                                    }}
-                                                >
-                                                    <Check
-                                                        className={cn(
-                                                            "mr-2 h-4 w-4",
-                                                            value === framework.value ? "opacity-100" : "opacity-0"
-                                                        )}
-                                                    />
-                                                    {framework.label}
-                                                </CommandItem>
-                                            ))}
-                                        </CommandGroup>
-                                    </CommandList>
-                                </Command>
-                            </PopoverContent>
-                        </Popover>
-                    </Campo>
+                    <Label htmlFor="nome">Nome:</Label>
+                    <Input
+                        id="nome"
+                        type="text"
+                        value={copo.nome}
+                        onChange={handleNomeChange}
+                    />
+
+                    <Label htmlFor="embalagem">Embalagem</Label>
+                    <Select onValueChange={(e) => handleEmbalagemChange(e)}>
+                        <SelectTrigger>
+                            {copo.embalagem ? copo.embalagem.nome : "Selecione"}
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                {ListaEmbalagens.map((embalagem) => (
+                                    <SelectItem key={embalagem.id} value={embalagem.id ?? ""}>
+                                        {embalagem.nome}
+                                    </SelectItem>
+                                ))}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Label htmlFor="adicionais">Adicionais</Label>
+                    <ComboBoxAdicionais />
 
                     <DialogFooter>
-                        <Button type="submit">Save changes</Button>
+                        <Button type="submit" onClick={handleAdicionarCopo}>
+                            Adicionar
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </div >
-    )
+        </div>
+    );
 }
 
 type BotaoCategoriaProps = {
@@ -146,7 +123,6 @@ type BotaoCategoriaProps = {
 
 export function BotaoCategoria({ Icon, tooltip }: BotaoCategoriaProps) {
     return (
-
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild className="flex w-14 h-14">
@@ -162,19 +138,58 @@ export function BotaoCategoria({ Icon, tooltip }: BotaoCategoriaProps) {
     )
 }
 
-type campoProps = {
-    titulo: string,
-    children: ReactNode
-}
-export function Campo({ titulo, children }: campoProps) {
+export function ComboBoxAdicionais() {
+    const [adicionaisSelecionados, setAdicionaisSelecionados] = useState<Adicional[]>([])
+    const [open, setOpen] = useState(false)
+    const [value, setValue] = useState("")
+
     return (
-        <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor={titulo} className="text-right">
-                    {titulo}
-                </Label>
-                {children}
+        <Popover open={open} onOpenChange={setOpen}>
+            <div>
+                {
+                    adicionaisSelecionados && adicionaisSelecionados.map((adicional) => (
+                        <div key={adicional.nome} className="flex flex-row justify-between">
+                            <span>{adicional.nome}</span>
+                            <span>{adicional.preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+                        </div>
+                    ))
+                }
             </div>
-        </div>
+            <PopoverTrigger asChild>
+                <Button variant={"secondary"} className="hover:bg-purple-500 py-4">
+                    <Plus size={24} />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[200px] p-0">
+                <Command>
+                    <CommandInput placeholder="Search framework..." />
+                    <CommandList>
+                        <CommandEmpty>Nenhum adicional encontrado.</CommandEmpty>
+                        <CommandGroup>
+                            {ListaAdicionais.map((adicional) => (
+                                <CommandItem
+                                    key={adicional.nome}
+                                    value={adicional.nome}
+                                    onSelect={(currentValue) => {
+                                        const adicional = ListaAdicionais.find((item) => item.nome === currentValue)
+                                        if (!adicional) return;
+                                        setAdicionaisSelecionados([...adicionaisSelecionados, adicional])
+                                        setOpen(false)
+                                    }}
+                                >
+                                    <Check
+                                        className={cn(
+                                            "mr-2 h-4 w-4",
+                                            value === adicional.nome ? "opacity-100" : "opacity-0"
+                                        )}
+                                    />
+                                    {adicional.nome}
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+                    </CommandList>
+                </Command>
+            </PopoverContent>
+        </Popover>
     )
 }
