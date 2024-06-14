@@ -7,11 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Adicional, Embalagem, ListaAdicionais, ListaEmbalagens } from "@/data/pedidoEditado";
-import { cn } from "@/lib/utils";
+import { Adicional, Embalagem, ListaAdicionais, ListaEmbalagens, obterPedidoEditado as obterPedidoAtual } from "@/data/pedidoEditado";
+import { queryClient } from "@/lib/reactQuery";
+import { createId } from "@paralleldrive/cuid2";
 import { Icon } from "@phosphor-icons/react/dist/lib/index";
-import { Check, PintGlass, Plus } from "@phosphor-icons/react/dist/ssr";
+import { PintGlass, Plus } from "@phosphor-icons/react/dist/ssr";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface CopoState {
     nome: string;
@@ -27,6 +30,38 @@ const copoInitialState: CopoState = {
 
 export default function NovoCopo() {
     const [copo, setCopo] = useState<CopoState>(copoInitialState);
+    
+    const { data: pedido } = useQuery({
+        queryFn: obterPedidoAtual,
+        queryKey: ['pedidoAtual'],
+    })
+    const { mutateAsync: alterarPedidoAtualFn } = useMutation({
+        mutationFn: alterarPedidoAtual,
+        onSuccess: (_, variables) => {
+            queryClient.setQueryData(['pedidos'], (data: any) => {
+                return [...data, {
+                    id: createId(),
+                    cliente: variables.cliente,
+                    data: variables.data,
+                    total: variables.total
+                }]
+            })
+        },
+    })
+
+    async function alterarPedidoAtual() {
+        try {
+            // await alterarPedidoAtualFn({
+            //     cliente: 'Evylin 2',
+            //     data: new Date(),
+            //     total: 500
+            // })
+            toast.success("Pedido adicionado")
+
+        } catch (error) {
+            toast.error("Erro ao adicionar pedido")
+        }
+    }
 
     const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCopo((prevState) => ({
@@ -58,8 +93,8 @@ export default function NovoCopo() {
         }
     };
 
-    const handleAdicionarCopo = () => {
-        // Tratar o copo adicionado
+    function handleAdicionarCopo() {
+
     };
 
     return (
@@ -141,19 +176,16 @@ export function BotaoCategoria({ Icon, tooltip }: BotaoCategoriaProps) {
 export function ComboBoxAdicionais() {
     const [adicionaisSelecionados, setAdicionaisSelecionados] = useState<Adicional[]>([])
     const [open, setOpen] = useState(false)
-    const [value, setValue] = useState("")
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <div>
-                {
-                    adicionaisSelecionados && adicionaisSelecionados.map((adicional) => (
-                        <div key={adicional.nome} className="flex flex-row justify-between">
-                            <span>{adicional.nome}</span>
-                            <span>{adicional.preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
-                        </div>
-                    ))
-                }
+                {adicionaisSelecionados && adicionaisSelecionados.map((adicional) => (
+                    <div key={adicional.nome} className="flex flex-row justify-between">
+                        <span>{adicional.nome}</span>
+                        <span>{adicional.preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+                    </div>
+                ))}
             </div>
             <PopoverTrigger asChild>
                 <Button variant={"secondary"} className="hover:bg-purple-500 py-4">
@@ -177,12 +209,6 @@ export function ComboBoxAdicionais() {
                                         setOpen(false)
                                     }}
                                 >
-                                    <Check
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            value === adicional.nome ? "opacity-100" : "opacity-0"
-                                        )}
-                                    />
                                     {adicional.nome}
                                 </CommandItem>
                             ))}

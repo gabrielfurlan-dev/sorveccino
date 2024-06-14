@@ -84,7 +84,7 @@ interface pedidoRequestProps {
 }
 
 export async function adicionarPedido({ cliente, data, total }: pedidoRequestProps) {
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    
     return
 }
 
