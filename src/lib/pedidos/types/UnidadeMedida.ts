@@ -1,0 +1,1 @@
+export type UnidadeMedida = 'Kg' | 'g' | 'ml' | 'L' | 'Uni'

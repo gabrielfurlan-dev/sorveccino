@@ -1,92 +1,52 @@
+import { Adicional } from "@/lib/pedidos/types/Adicional"
+import { Embalagem } from "@/lib/pedidos/types/Embalagem"
+import { Pedido } from "@/lib/pedidos/types/Pedido"
+import { db } from "@/lib/utils/db"
 import { createId } from "@paralleldrive/cuid2"
 
-export type Pedido = {
-    id?: string,
-    nomeCliente: string,
-    data: Date,
-    acais: Acai[],
-    cupomDesconto?: string
-}
-
-interface Acai extends Item {
-    embalagem: Embalagem,
-    adicionais?: Adicional[]
-    promocao?: Promocao,
-    onservacoes?: string,
-}
-
-type Promocao = {
-    descontoPorcentagem: number,
-    nomePromocao: string,
-    diasDaSemana: []
-}
-
-export interface Embalagem extends Item {
-    nome: string,
-    categoria: string,
-    tamanho: number,
-    unidadeMedida: UnidadeMedida
-}
-
-interface Item {
-    id?: string,
-    nome: string,
-    categoria?: string,
-    preco: number
-}
-
-export interface Adicional extends Item { }
-
-type UnidadeMedida = 'Kg' | 'g' | 'ml' | 'L' | 'Uni'
-
-export async function obterPedidoEditado(): Promise<Pedido> {
-    return {
-        id: createId(),
-        nomeCliente: 'Evylin',
-        data: new Date(),
-        acais: [
-            {
-                id: createId(),
-                embalagem: {
+export async function obterPedidosPendente(): Promise<Pedido[]> {
+    return [
+        {
+            id: createId(),
+            nomeCliente: 'Evylin',
+            data: new Date(),
+            acais: [
+                {
                     id: createId(),
-                    categoria: 'Copos descartáveis - Açaí',
-                    nome: 'Copo',
-                    tamanho: 300,
-                    unidadeMedida: "ml",
-                    preco: 10,
-                },
-                adicionais: [
-                    {
+                    embalagem: {
                         id: createId(),
-                        nome: 'Morango',
-                        preco: 4,
-                        categoria: 'Frutas'
+                        categoria: 'Copos descartáveis - Açaí',
+                        nome: 'Copo',
+                        tamanho: 300,
+                        unidadeMedida: "ml",
+                        preco: 10,
                     },
-                    {
-                        id: createId(),
-                        nome: 'Creme de Ninho',
-                        preco: 4,
-                        categoria: 'Cremes'
-                    },
-                ],
-                preco: 18,
-                nome: 'acai'
-            }
-        ]
-    }
+                    adicionais: [
+                        {
+                            id: createId(),
+                            nome: 'Morango',
+                            preco: 4,
+                            categoria: 'Frutas'
+                        },
+                        {
+                            id: createId(),
+                            nome: 'Creme de Ninho',
+                            preco: 4,
+                            categoria: 'Cremes'
+                        },
+                    ],
+                    preco: 18,
+                    nome: 'acai'
+                }
+            ]
+        }
+    ]
 }
 
-interface pedidoRequestProps {
-    id?: number
-    cliente: string
-    data: Date
-    total: number
+export async function AdicionarPedidoPendente({ pedido }: { pedido: Pedido }): Promise<void> {
+   
 }
 
-export async function adicionarPedido({ cliente, data, total }: pedidoRequestProps) {
-    
-    return
-}
 
 export const ListaEmbalagens: Embalagem[] = [
     {

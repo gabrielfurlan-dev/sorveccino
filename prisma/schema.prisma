@@ -7,57 +7,73 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Acompanhamentos {
-  id    String  @id @default(uuid())
-  nome  String
-  preco Decimal
+model Pedido {
+  id            String   @id @default(uuid())
+  nomeCliente   String
+  dataCriacao   DateTime @default(now())
+  dataAlteracao DateTime @updatedAt
+  Acais         Acai[]
+
+  cupom   Cupom?  @relation(fields: [cupomId], references: [id])
+  cupomId String?
 }
 
-model Frutas {
-  id    String  @id @default(uuid())
-  nome  String
-  preco Decimal
+model PedidoPendente {
+  id            String   @id @default(uuid())
+  nomeCliente   String
+  dataCriacao   DateTime @default(now())
+  dataAlteracao DateTime @updatedAt
+  Acais         Acai[]
+
+  cupom   Cupom?  @relation(fields: [cupomId], references: [id])
+  cupomId String?
 }
 
-model Cremes {
-  id    String  @id @default(uuid())
-  nome  String
-  preco Decimal
+model Acai {
+  id            String      @id @default(uuid())
+  nome          String
+  dataCriacao   DateTime    @default(now())
+  dataAlteracao DateTime    @updatedAt
+  adicionais    Adicional[]
+
+  embalagemId      String
+  embalagens       Embalagem       @relation(fields: [embalagemId], references: [id])
+  pedidoId         String?
+  Pedido           Pedido?         @relation(fields: [pedidoId], references: [id])
+  PedidoPendente   PedidoPendente? @relation(fields: [pedidoPendenteId], references: [id])
+  pedidoPendenteId String?
 }
 
-model TamanhoCoposAcai {
-  id      String  @id @default(uuid())
-  tamanho String
-  preco   Decimal
+model Cupom {
+  id            String   @id @default(uuid())
+  codigo        String
+  dataCriacao   DateTime @default(now())
+  dataExpiracao DateTime
+
+  Pedido         Pedido[]
+  PedidoPendente PedidoPendente[]
 }
 
-// model Cliente {
-//   id         String   @id @default(uuid())
-//   endereco   Endereco @relation(fields: [enderecoId], references: [id])
-//   enderecoId String
-// }
+model Embalagem {
+  id            String   @id @default(uuid())
+  nome          String
+  dataCriacao   DateTime @default(now())
+  dataAlteracao DateTime @updatedAt
+  categoria     String
+  tamanho       Int
+  unidadeMedida String
 
-// model Endereco {
-//   id                String    @id @default(uuid())
-//   logradouro        String
-//   numero            String
-//   bairro            String
-//   pontoDeReferencia String
-//   Cliente           Cliente[]
-// }
+  Acai Acai[]
+}
 
-// model Item {
-//   id       String  @id @default(uuid())
-//   nome  String
-//   categoria String
-//   preco    Decimal
+model Adicional {
+  id            String   @id @default(uuid())
+  dataCriacao   DateTime @default(now())
+  dataAlteracao DateTime @updatedAt
+  nome          String
+  categoria     String
+  preco         Float
 
-//   Pedido   Pedido? @relation(fields: [pedidoId], references: [id])
-//   pedidoId String?
-// }
-
-// model Pedido {
-//   id          String @id @default(uuid())
-//   nomeCliente String
-//   itens       Item[]
-// }
+  acaiId String?
+  Acai   Acai?   @relation(fields: [acaiId], references: [id])
+}

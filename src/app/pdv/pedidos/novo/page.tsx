@@ -7,14 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Adicional, Embalagem, ListaAdicionais, ListaEmbalagens, obterPedidoEditado as obterPedidoAtual } from "@/data/pedidoEditado";
-import { queryClient } from "@/lib/reactQuery";
-import { createId } from "@paralleldrive/cuid2";
 import { Icon } from "@phosphor-icons/react/dist/lib/index";
 import { PintGlass, Plus } from "@phosphor-icons/react/dist/ssr";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Embalagem } from "@/lib/pedidos/types/Embalagem";
+import { Adicional } from "@/lib/pedidos/types/Adicional";
+import { ListaAdicionais, ListaEmbalagens } from "@/data/PedidoPentente";
 
 interface CopoState {
     nome: string;
@@ -30,34 +30,28 @@ const copoInitialState: CopoState = {
 
 export default function NovoCopo() {
     const [copo, setCopo] = useState<CopoState>(copoInitialState);
-    
-    const { data: pedido } = useQuery({
-        queryFn: obterPedidoAtual,
-        queryKey: ['pedidoAtual'],
-    })
-    const { mutateAsync: alterarPedidoAtualFn } = useMutation({
-        mutationFn: alterarPedidoAtual,
+
+    const { mutateAsync: adicionarItemFn } = useMutation({
+        // mutationFn: AdicionarPedidoPendente,
         onSuccess: (_, variables) => {
-            queryClient.setQueryData(['pedidos'], (data: any) => {
-                return [...data, {
-                    id: createId(),
-                    cliente: variables.cliente,
-                    data: variables.data,
-                    total: variables.total
-                }]
-            })
+            // queryClient.setQueryData(['pedidos'], (data: any) => {
+            //     return [...data, {
+            //         id: createId(),
+            //         cliente: variables.nomeCliente,
+            //         data: variables.data,
+            //         total: variables.total
+            //     }]
+            // })
         },
     })
-
-    async function alterarPedidoAtual() {
+    function handleAdicionarCopo() {
         try {
-            // await alterarPedidoAtualFn({
-            //     cliente: 'Evylin 2',
+            // await adicionarItemFn({
+            //     nomeCliente: 'Evylin 2',
             //     data: new Date(),
             //     total: 500
             // })
             toast.success("Pedido adicionado")
-
         } catch (error) {
             toast.error("Erro ao adicionar pedido")
         }
@@ -78,23 +72,6 @@ export default function NovoCopo() {
             ...prevState,
             embalagem: selectedEmbalagem || null,
         }));
-    };
-
-    function handleAdicionaisChange(idAdicional: string) {
-        const selectedAdicional = ListaAdicionais.find(
-            (adicional) => adicional.id === idAdicional
-        );
-
-        if (selectedAdicional) {
-            setCopo((prevState) => ({
-                ...prevState,
-                adicionais: [...prevState.adicionais, selectedAdicional],
-            }));
-        }
-    };
-
-    function handleAdicionarCopo() {
-
     };
 
     return (

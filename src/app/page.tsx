@@ -9,7 +9,7 @@ export default function Home() {
     <div className="w-full h-screen flex flex-col items-center justify-center gap-4">
       <span className="text-3xl">Sorveccino</span>
       <div className="flex flex-col">
-        <Button onClick={() => router.push("novopedido")} className="bg-red-500 p-4 rounded w-[200px]">Calcula preço Açai</Button>
+        <Button onClick={() => router.push("/pdv/pedidos/todos")} className="bg-red-500 p-4 rounded w-[200px]">Pedidos</Button>
       </div>
     </div>
   );

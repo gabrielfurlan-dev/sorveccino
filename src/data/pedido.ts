@@ -1,3 +1,5 @@
+import { Pedido } from "@/lib/pedidos/types/Pedido"
+
 export async function obterPedidos() {
     await new Promise(resolve => setTimeout(resolve, 1000))
     return [
@@ -16,13 +18,10 @@ export async function obterPedidos() {
 }
 
 interface pedidoRequestProps {
-    id?: number
-    cliente: string
-    data: Date
-    total: number
+    nomeCliente: string
+    pedido: Pedido
 }
 
-export async function adicionarPedido({ cliente, data, total }: pedidoRequestProps) {
-    await new Promise(resolve => setTimeout(resolve, 1000))
+export async function adicionarPedido({ nomeCliente, pedido }: pedidoRequestProps) {
     return
 }
