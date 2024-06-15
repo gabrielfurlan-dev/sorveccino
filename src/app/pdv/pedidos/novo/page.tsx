@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { Embalagem } from "@/lib/pedidos/types/Embalagem";
 import { Adicional } from "@/lib/pedidos/types/Adicional";
 import { ListaAdicionais, ListaEmbalagens } from "@/data/PedidoPentente";
+import { useForm, Controller } from "react-hook-form";
 
 interface CopoState {
     nome: string;
@@ -30,33 +31,12 @@ const copoInitialState: CopoState = {
 
 export default function NovoCopo() {
     const [copo, setCopo] = useState<CopoState>(copoInitialState);
-
-    const { mutateAsync: adicionarItemFn } = useMutation({
-        // mutationFn: AdicionarPedidoPendente,
-        onSuccess: (_, variables) => {
-            // queryClient.setQueryData(['pedidos'], (data: any) => {
-            //     return [...data, {
-            //         id: createId(),
-            //         cliente: variables.nomeCliente,
-            //         data: variables.data,
-            //         total: variables.total
-            //     }]
-            // })
-        },
-    })
-    function handleAdicionarCopo() {
-        try {
-            // await adicionarItemFn({
-            //     nomeCliente: 'Evylin 2',
-            //     data: new Date(),
-            //     total: 500
-            // })
-            toast.success("Pedido adicionado")
-        } catch (error) {
-            toast.error("Erro ao adicionar pedido")
-        }
-    }
-
+    const { control, handleSubmit, formState: { errors } } = useForm<CopoState>({
+        defaultValues: copoInitialState
+    });
+    const onSubmit = (data: CopoState) => {
+        console.log(data);
+    };
     const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCopo((prevState) => ({
             ...prevState,
@@ -89,36 +69,43 @@ export default function NovoCopo() {
                             Preencha todos os campos corretamente e clique em salvar.
                         </DialogDescription>
                     </DialogHeader>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div aria-description="Nome">
+                            <Label htmlFor="nome">Nome:</Label>
+                            <Controller
+                                name="nome"
+                                control={control}
+                                rules={{ required: "Nome é obrigatório" }}
+                                render={({ field }) => (
+                                    <Input
+                                        id="nome"
+                                        type="text"
+                                        {...field}
+                                    />)}
+                            />
+                            {errors.nome && <span>{errors.nome.message}</span>}
+                        </div>
+                        <Label htmlFor="embalagem">Embalagem</Label>
+                        <Select onValueChange={(e) => handleEmbalagemChange(e)}>
+                            <SelectTrigger>
+                                {copo.embalagem ? copo.embalagem.nome : "Selecione"}
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    {ListaEmbalagens.map((embalagem) => (
+                                        <SelectItem key={embalagem.id} value={embalagem.id ?? ""}>
+                                            {embalagem.nome}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
 
-                    <Label htmlFor="nome">Nome:</Label>
-                    <Input
-                        id="nome"
-                        type="text"
-                        value={copo.nome}
-                        onChange={handleNomeChange}
-                    />
-
-                    <Label htmlFor="embalagem">Embalagem</Label>
-                    <Select onValueChange={(e) => handleEmbalagemChange(e)}>
-                        <SelectTrigger>
-                            {copo.embalagem ? copo.embalagem.nome : "Selecione"}
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {ListaEmbalagens.map((embalagem) => (
-                                    <SelectItem key={embalagem.id} value={embalagem.id ?? ""}>
-                                        {embalagem.nome}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-
-                    <Label htmlFor="adicionais">Adicionais</Label>
-                    <ComboBoxAdicionais />
-
+                        <Label htmlFor="adicionais">Adicionais</Label>
+                        <ComboBoxAdicionais />
+                    </form>
                     <DialogFooter>
-                        <Button type="submit" onClick={handleAdicionarCopo}>
+                        <Button type="submit" onClick={() => { }}>
                             Adicionar
                         </Button>
                     </DialogFooter>
