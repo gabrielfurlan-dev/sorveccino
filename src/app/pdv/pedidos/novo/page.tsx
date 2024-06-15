@@ -5,15 +5,14 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Icon } from "@phosphor-icons/react/dist/lib/index";
-import { PintGlass, Plus, Trash, X } from "@phosphor-icons/react/dist/ssr";
+import { PintGlass, Plus, X } from "@phosphor-icons/react/dist/ssr";
 import { Adicional } from "@/lib/pedidos/types/Adicional";
 import { ListaAdicionais, ListaEmbalagens } from "@/data/PedidoPentente";
 import { useForm, Controller, Control } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { BotaoCategoria } from "./components/BotaoCategoria";
 
 export default function NovoCopo() {
     const form = useForm<PedidoSchema>({
@@ -113,28 +112,6 @@ export default function NovoCopo() {
     );
 }
 
-type BotaoCategoriaProps = {
-    Icon: Icon,
-    tooltip: string
-}
-
-export function BotaoCategoria({ Icon, tooltip }: BotaoCategoriaProps) {
-    return (
-        <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild className="flex w-14 h-14">
-                    <Button variant={"secondary"} className="hover:bg-purple-500 py-4">
-                        <Icon size={24} />
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>{tooltip}</p>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
-    )
-}
-
 const pedidoSchema = z.object({
     nomeCliente: z.string(),
     embalagem: z.object({
@@ -170,13 +147,13 @@ export function ComboBoxAdicionaisHookForm({ control }: ComboBoxAdicionaisProps)
             render={({ field }) => {
                 const { onChange, value = [] } = field;
 
-                // Filtrar valores nulos antes de renderizar
                 const nonNullValue = value.filter(item => item !== null) as Adicional[];
 
                 const addItem = (adicional: Adicional) => {
                     if (!nonNullValue.some(item => item.id === adicional.id)) {
                         onChange([...nonNullValue, adicional]);
                     }
+                    console.log(field.value)
                 };
 
                 const removeItem = (id: string) => {
