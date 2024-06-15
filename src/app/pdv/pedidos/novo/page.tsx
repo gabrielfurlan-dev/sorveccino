@@ -3,64 +3,38 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Icon } from "@phosphor-icons/react/dist/lib/index";
-import { PintGlass, Plus } from "@phosphor-icons/react/dist/ssr";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
-import { Embalagem } from "@/lib/pedidos/types/Embalagem";
+import { PintGlass, Plus, Trash, X } from "@phosphor-icons/react/dist/ssr";
 import { Adicional } from "@/lib/pedidos/types/Adicional";
 import { ListaAdicionais, ListaEmbalagens } from "@/data/PedidoPentente";
-import { useForm, Controller } from "react-hook-form";
-
-interface CopoState {
-    nome: string;
-    embalagem: Embalagem | null;
-    adicionais: Adicional[];
-}
-
-const copoInitialState: CopoState = {
-    nome: "",
-    embalagem: null,
-    adicionais: [],
-};
+import { useForm, Controller, Control } from "react-hook-form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function NovoCopo() {
-    const [copo, setCopo] = useState<CopoState>(copoInitialState);
-    const { control, handleSubmit, formState: { errors } } = useForm<CopoState>({
-        defaultValues: copoInitialState
-    });
-    const onSubmit = (data: CopoState) => {
-        console.log(data);
-    };
-    const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCopo((prevState) => ({
-            ...prevState,
-            nome: event.target.value,
-        }));
-    };
+    const form = useForm<PedidoSchema>({
+        resolver: zodResolver(pedidoSchema),
+        defaultValues: {
+            nomeCliente: "Cliente sem nome.",
+            embalagem: ListaEmbalagens[0],
+        },
+    })
 
-    function handleEmbalagemChange(idEmbalagem: string) {
-        const selectedEmbalagem = ListaEmbalagens.find(
-            (embalagem) => embalagem.id === idEmbalagem
-        );
-        setCopo((prevState) => ({
-            ...prevState,
-            embalagem: selectedEmbalagem || null,
-        }));
-    };
+    function onSubmit(values: PedidoSchema) {
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        console.log(values)
+    }
 
     return (
         <div className="w-full h-[90vh] flex items-center justify-center">
             <Dialog>
                 <DialogTrigger asChild>
-                    <div>
-                        <BotaoCategoria Icon={PintGlass} tooltip="Açaís" />
-                    </div>
+                    <div><BotaoCategoria Icon={PintGlass} tooltip="Açaís" /></div>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
@@ -69,49 +43,73 @@ export default function NovoCopo() {
                             Preencha todos os campos corretamente e clique em salvar.
                         </DialogDescription>
                     </DialogHeader>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div aria-description="Nome">
-                            <Label htmlFor="nome">Nome:</Label>
-                            <Controller
-                                name="nome"
-                                control={control}
-                                rules={{ required: "Nome é obrigatório" }}
+                    <Form {...form} >
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <FormField
+                                control={form.control}
+                                name="nomeCliente"
                                 render={({ field }) => (
-                                    <Input
-                                        id="nome"
-                                        type="text"
-                                        {...field}
-                                    />)}
+                                    <FormItem>
+                                        <FormLabel>Username</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Gabriel Furlan" {...field} />
+                                        </FormControl>
+                                        <FormDescription>Nome do Cliente</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                            {errors.nome && <span>{errors.nome.message}</span>}
-                        </div>
-                        <Label htmlFor="embalagem">Embalagem</Label>
-                        <Select onValueChange={(e) => handleEmbalagemChange(e)}>
-                            <SelectTrigger>
-                                {copo.embalagem ? copo.embalagem.nome : "Selecione"}
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    {ListaEmbalagens.map((embalagem) => (
-                                        <SelectItem key={embalagem.id} value={embalagem.id ?? ""}>
-                                            {embalagem.nome}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-
-                        <Label htmlFor="adicionais">Adicionais</Label>
-                        <ComboBoxAdicionais />
-                    </form>
-                    <DialogFooter>
-                        <Button type="submit" onClick={() => { }}>
-                            Adicionar
-                        </Button>
-                    </DialogFooter>
+                            <FormField
+                                control={form.control}
+                                name="embalagem"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Embalagem</FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                {...field}
+                                                value={field.value ? field.value.id : ""}
+                                                onValueChange={(id) => { field.onChange(ListaEmbalagens.find(e => e.id === id)); }}
+                                            >
+                                                <SelectTrigger>{field.value ? field.value.nome : "Selecione"}</SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        {ListaEmbalagens.map((embalagem) => (
+                                                            <SelectItem key={embalagem.id} value={embalagem.id ?? ""}>
+                                                                {embalagem.nome}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormDescription>Embalagem do Açaí</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="adicionais"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Adicionais</FormLabel>
+                                        <FormControl>
+                                            <ComboBoxAdicionaisHookForm control={form.control} />
+                                        </FormControl>
+                                        <FormDescription>Adicionais do Açaí</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <DialogFooter>
+                                <Button type="submit">Adicionar</Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
                 </DialogContent>
             </Dialog>
-        </div>
+        </div >
     );
 }
 
@@ -137,49 +135,94 @@ export function BotaoCategoria({ Icon, tooltip }: BotaoCategoriaProps) {
     )
 }
 
-export function ComboBoxAdicionais() {
-    const [adicionaisSelecionados, setAdicionaisSelecionados] = useState<Adicional[]>([])
-    const [open, setOpen] = useState(false)
+const pedidoSchema = z.object({
+    nomeCliente: z.string(),
+    embalagem: z.object({
+        id: z.string(),
+        categoria: z.string(),
+        nome: z.string(),
+        tamanho: z.number(),
+        unidadeMedida: z.string(),
+        preco: z.number(),
+    }),
+    adicionais: z.array(
+        z.object({
+            id: z.string(),
+            nome: z.string(),
+            preco: z.number(),
+            categoria: z.string(),
+        }).nullable()
+    ),
+})
 
+type PedidoSchema = z.infer<typeof pedidoSchema>
+
+type ComboBoxAdicionaisProps = {
+    control: Control<PedidoSchema>
+}
+
+export function ComboBoxAdicionaisHookForm({ control }: ComboBoxAdicionaisProps) {
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <div>
-                {adicionaisSelecionados && adicionaisSelecionados.map((adicional) => (
-                    <div key={adicional.nome} className="flex flex-row justify-between">
-                        <span>{adicional.nome}</span>
-                        <span>{adicional.preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
-                    </div>
-                ))}
-            </div>
-            <PopoverTrigger asChild>
-                <Button variant={"secondary"} className="hover:bg-purple-500 py-4">
-                    <Plus size={24} />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-                <Command>
-                    <CommandInput placeholder="Search framework..." />
-                    <CommandList>
-                        <CommandEmpty>Nenhum adicional encontrado.</CommandEmpty>
-                        <CommandGroup>
-                            {ListaAdicionais.map((adicional) => (
-                                <CommandItem
-                                    key={adicional.nome}
-                                    value={adicional.nome}
-                                    onSelect={(currentValue) => {
-                                        const adicional = ListaAdicionais.find((item) => item.nome === currentValue)
-                                        if (!adicional) return;
-                                        setAdicionaisSelecionados([...adicionaisSelecionados, adicional])
-                                        setOpen(false)
-                                    }}
-                                >
-                                    {adicional.nome}
-                                </CommandItem>
+        <Controller
+            name="adicionais"
+            control={control}
+            defaultValue={[]}
+            render={({ field }) => {
+                const { onChange, value = [] } = field;
+
+                // Filtrar valores nulos antes de renderizar
+                const nonNullValue = value.filter(item => item !== null) as Adicional[];
+
+                const addItem = (adicional: Adicional) => {
+                    if (!nonNullValue.some(item => item.id === adicional.id)) {
+                        onChange([...nonNullValue, adicional]);
+                    }
+                };
+
+                const removeItem = (id: string) => {
+                    onChange(nonNullValue.filter(item => item.id !== id));
+                };
+
+                return (
+                    <Popover>
+                        <div>
+                            {nonNullValue.map((adicional: Adicional) => (
+                                <div key={adicional.nome} className="flex flex-row justify-between items-center gap-2">
+                                    <div className="w-full dark:text-neutral-500 text-neutral-800 flex flex-row justify-between">
+                                        <span>{adicional.nome}</span>
+                                        <span>{adicional.preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+                                    </div>
+                                    <span onClick={() => removeItem(adicional.id ?? "")}><X className="dark:text-neutral-500 text-neutral-800 hover:dark:text-red-500" size={18} /></span>
+                                </div>
                             ))}
-                        </CommandGroup>
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    )
+                        </div>
+                        <PopoverTrigger asChild>
+                            <Button variant="secondary" className="hover:bg-purple-500 py-4">
+                                <Plus size={24} />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Selecione um Adicional..." />
+                                <CommandList>
+                                    <CommandEmpty>Nenhum adicional encontrado.</CommandEmpty>
+                                    <CommandGroup>
+                                        {ListaAdicionais.map((adicional: Adicional) => (
+                                            <CommandItem
+                                                key={adicional.id}
+                                                value={adicional.id}
+                                                onSelect={() => addItem(adicional)}
+                                            >
+                                                {adicional.nome}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                )
+            }}
+        />
+    );
 }
