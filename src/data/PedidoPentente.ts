@@ -4,71 +4,8 @@ import { Pedido } from "@/lib/pedidos/types/Pedido"
 import { db } from "@/lib/utils/db"
 import { createId } from "@paralleldrive/cuid2"
 
-export async function obterPedidosPendente(): Promise<Pedido[]> {
-    // return [
-    //     {
-    //         id: createId(),
-    //         nomeCliente: 'Evylin',
-    //         data: new Date(),
-    //         acais: [
-    //             {
-    //                 id: createId(),
-    //                 embalagem: {
-    //                     id: createId(),
-    //                     categoria: 'Copos descartáveis - Açaí',
-    //                     nome: 'Copo',
-    //                     tamanho: 300,
-    //                     unidadeMedida: "ml",
-    //                     preco: 10,
-    //                 },
-    //                 adicionais: [
-    //                     {
-    //                         id: createId(),
-    //                         nome: 'Morango',
-    //                         preco: 4,
-    //                         categoria: 'Frutas'
-    //                     },
-    //                     {
-    //                         id: createId(),
-    //                         nome: 'Creme de Ninho',
-    //                         preco: 4,
-    //                         categoria: 'Cremes'
-    //                     },
-    //                 ],
-    //                 preco: 18,
-    //                 nome: 'acai'
-    //             }
-    //         ]
-    //     }
-    // ]
-    const pedidos = await db.pedidoPendente.findMany({
-        include: {
-            Acais: {
-                include: {
-                    embalagens: true,
-                    adicionais: true,
-                    Pedido: true,
-                }
-            }
-        }
-    })
-    const pedidosNormalizados = pedidos.map(pedido => {
-        return {
-            ...pedido,
-            acais: pedido.Acais.map(acai => {
-                return {
-                    ...acai,
-                    embalagem: acai.embalagens
-                }
-            })
-        }
-    })
-
-    return pedidosNormalizados;
-}
-
 export async function AdicionarPedidoPendente(pedido: Pedido): Promise<void> {
-    await db.pedidoPendente.create({ data: pedido })
+    // await db.pedidoPendente.create({ data: pedido })
 }
 
 export const ListaEmbalagens: Embalagem[] = [

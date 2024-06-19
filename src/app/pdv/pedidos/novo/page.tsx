@@ -7,14 +7,25 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { PintGlass, Plus, X } from "@phosphor-icons/react/dist/ssr";
 import { Adicional } from "@/lib/pedidos/types/Adicional";
-import { ListaAdicionais, ListaEmbalagens } from "@/data/PedidoPentente";
+import { AdicionarPedidoPendente, ListaAdicionais, ListaEmbalagens } from "@/data/PedidoPentente";
 import { useForm, Controller, Control } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { BotaoCategoria } from "./components/BotaoCategoria";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/lib/reactQuery";
 
 export default function NovoCopo() {
+    
+    const mutation = useMutation({
+        mutationFn: AdicionarPedidoPendente,
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['pedidos'] })
+        },
+      })
+    
+    
     const form = useForm<PedidoSchema>({
         resolver: zodResolver(pedidoSchema),
         defaultValues: {
@@ -24,9 +35,7 @@ export default function NovoCopo() {
     })
 
     function onSubmit(values: PedidoSchema) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+        
     }
 
     return (
@@ -146,14 +155,12 @@ export function ComboBoxAdicionaisHookForm({ control }: ComboBoxAdicionaisProps)
             defaultValue={[]}
             render={({ field }) => {
                 const { onChange, value = [] } = field;
-
                 const nonNullValue = value.filter(item => item !== null) as Adicional[];
 
                 const addItem = (adicional: Adicional) => {
                     if (!nonNullValue.some(item => item.id === adicional.id)) {
                         onChange([...nonNullValue, adicional]);
                     }
-                    console.log(field.value)
                 };
 
                 const removeItem = (id: string) => {
