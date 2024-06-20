@@ -13,15 +13,12 @@ export const embalagens = pgTable("embalagens", {
     idItem: text("id_item").references(() => itens.id),
 })
 
-// export const embalagensRelation = relations(embalagens, ({ one, many }) => {
-//     return {
-//         user: one(, {
-//             fields: [reports.userId],
-//             references: [users.id],
-//             relationName: 'report_user'
-//         }),
-//         tasks: many(tasks, {
-//             relationName: 'report_tasks'
-//         })
-//     }
-// })
+export const embalagensRelation = relations(embalagens, ({ one, many }) => {
+    return {
+        item: one(itens, {
+            fields: [embalagens.idItem],
+            references: [itens.id],
+        }),
+        embalagens: many(embalagens),
+    }
+})
