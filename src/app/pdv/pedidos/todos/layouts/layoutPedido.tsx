@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 export function LayoutPedidos() {
     const router = useRouter()
+    //parei aqui tentando buscar os dados do pedido atual pelo react query
     const queryClient = useQueryClient()
     const { data: pedidos } = useQuery({
         queryFn: obterPedidos,
