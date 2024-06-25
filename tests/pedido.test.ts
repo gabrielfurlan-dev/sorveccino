@@ -1,13 +1,10 @@
 import { describe, expect } from "bun:test";
 import { AddOrderCommand } from "@/lib/orders/commands/addOrderCommand";
-import { execute } from "@/lib/orders/useCases/addOrderUseCase";
+import { AddOrderUseCase } from "@/lib/orders/useCases/addOrderUseCase";
 
 describe("Should Save Order", async () => {
-  
-    //TODO: NEED TO INSERT A NEW COSTUMER FIRST BECAUSE THE ORDER NEEDS TO BE ASSOCIATED WITH A COSTUMER
-  
-    const order: AddOrderCommand = {
-    costumerId: "1",
+  const order: AddOrderCommand = {
+    customerId: "iyzcxpwu6a8yjdrsghwekkes",
     date: new Date(),
     acais: [
       {
@@ -40,6 +37,8 @@ describe("Should Save Order", async () => {
     ],
   };
 
-  await execute(order);
-
+  const addOrder = new AddOrderUseCase();
+  const result = await addOrder.execute(order);
+  console.log(result);
+  expect(result.success).toBe(true);
 });
