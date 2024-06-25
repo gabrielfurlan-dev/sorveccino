@@ -2,7 +2,7 @@ import { Adicional } from '@/lib/orders/types/Adicional';
 import { Embalagem } from '@/lib/orders/types/Embalagem';
 
 export type AddOrderCommand = {
-    costumerId: string,
+    customerId: string,
     date: Date,
     acais: AddAcaiCommand[],
     discountCode?: string
