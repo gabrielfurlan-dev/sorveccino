@@ -1,5 +1,5 @@
 {
-  "id": "ae972705-3645-4a1e-8e3b-3fdbe372914c",
+  "id": "35f69834-eaef-4645-a0e7-b4abb02e8d58",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -52,8 +52,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.clientes": {
-      "name": "clientes",
+    "public.customers": {
+      "name": "customers",
       "schema": "",
       "columns": {
         "id": {
@@ -76,8 +76,8 @@
           "notNull": true,
           "default": "now()"
         },
-        "nome": {
-          "name": "nome",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -94,50 +94,50 @@
           "primaryKey": false,
           "notNull": false
         },
-        "telefone": {
-          "name": "telefone",
+        "phone": {
+          "name": "phone",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "cep": {
-          "name": "cep",
+        "zipCode": {
+          "name": "zipCode",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "logradouro": {
-          "name": "logradouro",
+        "address": {
+          "name": "address",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "complemento": {
-          "name": "complemento",
+        "city": {
+          "name": "city",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "bairro": {
-          "name": "bairro",
+        "state": {
+          "name": "state",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "uf": {
-          "name": "uf",
+        "number": {
+          "name": "number",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "numero": {
-          "name": "numero",
+        "complement": {
+          "name": "complement",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "cidade": {
-          "name": "cidade",
+        "neighborhood": {
+          "name": "neighborhood",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -210,8 +210,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.pedidos": {
-      "name": "pedidos",
+    "public.orders": {
+      "name": "orders",
       "schema": "",
       "columns": {
         "id": {
@@ -234,26 +234,20 @@
           "notNull": true,
           "default": "now()"
         },
-        "nome_cliente": {
-          "name": "nome_cliente",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "acais": {
           "name": "acais",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "cupom_desconto": {
-          "name": "cupom_desconto",
+        "discount_code": {
+          "name": "discount_code",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "id_cliente": {
-          "name": "id_cliente",
+        "customer_id": {
+          "name": "customer_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -261,12 +255,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "pedidos_id_cliente_clientes_id_fk": {
-          "name": "pedidos_id_cliente_clientes_id_fk",
-          "tableFrom": "pedidos",
-          "tableTo": "clientes",
+        "orders_customer_id_customers_id_fk": {
+          "name": "orders_customer_id_customers_id_fk",
+          "tableFrom": "orders",
+          "tableTo": "customers",
           "columnsFrom": [
-            "id_cliente"
+            "customer_id"
           ],
           "columnsTo": [
             "id"
