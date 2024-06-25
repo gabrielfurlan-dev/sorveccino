@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { GoogleLogo } from "@phosphor-icons/react/dist/ssr";
 import Placard from "@/components/sorveccino-ui/Placard";
+import GoogleSignInButton from "@/components/sorveccino-ui/GoogleSignInButton";
 
 export default function Home() {
   const router = useRouter()
@@ -56,9 +57,10 @@ export default function Home() {
             <Logo />
           </motion.div>
           <motion.div variants={variants2} className="flex w-full justify-center">
-            <Button variant="outline" className="w-[448px] h-[56px] gap-2">
+            {/* <Button variant="outline" className="w-[448px] h-[56px] gap-2">
               <GoogleLogo size={24} /> Entrar com Google
-            </Button>
+            </Button> */}
+            {/* <GoogleSignInButton /> */}
           </motion.div>
           {/* <Button onClick={() => router.push("/pdv/pedidos/todos")} className="bg-red-500 p-4 rounded w-[200px]">Pedidos</Button> */}
         </motion.div>
