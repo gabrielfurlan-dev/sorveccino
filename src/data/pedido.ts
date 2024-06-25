@@ -1,4 +1,4 @@
-import { Pedido } from "@/lib/pedidos/types/Pedido"
+import { Pedido } from "@/lib/orders/types/Pedido"
 
 export async function obterPedidos() {
     await new Promise(resolve => setTimeout(resolve, 1000))

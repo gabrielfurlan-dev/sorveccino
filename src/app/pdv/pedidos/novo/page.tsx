@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Plus, X } from "@phosphor-icons/react/dist/ssr";
-import { Adicional } from "@/lib/pedidos/types/Adicional";
+import { Adicional } from "@/lib/orders/types/Adicional";
 import { ListaAdicionais } from "@/data/PedidoPentente";
 import { Controller, Control } from "react-hook-form";
 import { z } from "zod";

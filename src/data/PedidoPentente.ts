@@ -1,6 +1,6 @@
-import { Acai } from "@/lib/pedidos/types/Acai";
-import { Adicional } from "@/lib/pedidos/types/Adicional";
-import { Embalagem } from "@/lib/pedidos/types/Embalagem";
+import { Acai } from "@/lib/orders/types/Acai";
+import { Adicional } from "@/lib/orders/types/Adicional";
+import { Embalagem } from "@/lib/orders/types/Embalagem";
 
 export async function AdicionarAcai(acai: Acai): Promise<void> {}
 
