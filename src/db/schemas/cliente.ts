@@ -9,7 +9,7 @@ export const clientes = pgTable("clientes", {
     cpf: text("cpf"),
     email: text("email"),
     telefone: text("telefone"),
-    cep: text("cep").notNull(),
+    cep: text("cep"),
     logradouro: text("logradouro"),
     complemento: text("complemento"),
     bairro: text("bairro"),
