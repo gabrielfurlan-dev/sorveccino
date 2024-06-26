@@ -2,8 +2,6 @@ import {
     timestamp,
     pgTable,
     text,
-    primaryKey,
-    integer,
 } from "drizzle-orm/pg-core"
 
 export const users = pgTable("user", {

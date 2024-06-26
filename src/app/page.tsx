@@ -60,7 +60,7 @@ export default function Home() {
             {/* <Button variant="outline" className="w-[448px] h-[56px] gap-2">
               <GoogleLogo size={24} /> Entrar com Google
             </Button> */}
-            {/* <GoogleSignInButton /> */}
+            <GoogleSignInButton children="Entrar com Google" />
           </motion.div>
           {/* <Button onClick={() => router.push("/pdv/pedidos/todos")} className="bg-red-500 p-4 rounded w-[200px]">Pedidos</Button> */}
         </motion.div>
