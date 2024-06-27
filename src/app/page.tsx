@@ -1,17 +1,23 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 import Loading from "./loading/loading";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { GoogleLogo } from "@phosphor-icons/react/dist/ssr";
 import Placard from "@/components/sorveccino-ui/Placard";
-import GoogleSignInButton from "@/components/sorveccino-ui/GoogleSignInButton";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Home() {
-  const router = useRouter()
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-
+  const { data } = useSession();
+  const handleLogoutClick = () => signOut();
+  const handleLoginClick = () => {
+    signIn("google", {
+      callbackUrl: "http://localhost:3000/pdv/pedidos/todos",
+    });
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -49,7 +55,12 @@ export default function Home() {
     <div className="w-full h-screen flex flex-col items-center justify-center gap-4">
       <Loading isLoading={isLoading} />
       {!isLoading && (
-        <motion.div initial="hidden" animate="visible" variants={variants} className="flex flex-col gap-y-8">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={variants}
+          className="flex flex-col gap-y-8"
+        >
           <motion.div className="flex w-full justify-center">
             <Placard textPlacard="Bem vindo(a) a Sorveccino!" fontFamily="poppins" />
           </motion.div>
@@ -57,12 +68,10 @@ export default function Home() {
             <Logo />
           </motion.div>
           <motion.div variants={variants2} className="flex w-full justify-center">
-            {/* <Button variant="outline" className="w-[448px] h-[56px] gap-2">
+            <Button variant="outline" className="w-[448px] h-[56px] gap-2" onClick={handleLoginClick}>
               <GoogleLogo size={24} /> Entrar com Google
-            </Button> */}
-            <GoogleSignInButton children="Entrar com Google" />
+            </Button>
           </motion.div>
-          {/* <Button onClick={() => router.push("/pdv/pedidos/todos")} className="bg-red-500 p-4 rounded w-[200px]">Pedidos</Button> */}
         </motion.div>
       )}
     </div>

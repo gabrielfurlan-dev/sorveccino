@@ -23,10 +23,10 @@ export function LayoutPedidos() {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead ><span>Nome</span></TableHead>
-                            <TableHead ><span>Data</span></TableHead>
-                            <TableHead ><span>Hora</span></TableHead>
-                            <TableHead ><span>Total</span></TableHead>
+                            <TableHead><span>Nome</span></TableHead>
+                            <TableHead><span>Data</span></TableHead>
+                            <TableHead><span>Hora</span></TableHead>
+                            <TableHead><span>Total</span></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>

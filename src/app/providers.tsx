@@ -3,6 +3,7 @@
 import { ThemeProvider } from '@/components/theme-provider'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
+import AuthProvider from '@/lib/auth'
 
 type ProviderProps = {
     children: React.ReactNode
@@ -13,14 +14,16 @@ export default function Providers({ children }: ProviderProps) {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-            >
-                {children}
-            </ThemeProvider>
+            <AuthProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {children}
+                </ThemeProvider>
+            </AuthProvider>
         </QueryClientProvider>
     )
 }
