@@ -1,21 +1,24 @@
-"use client"
+"use client";
 
 import * as React from "react";
 import LogoNavbar from "../../assets/logo-navbar";
 import { Nanum_Pen_Script } from "next/font/google";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, } from "@/components/ui/tooltip"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { BellSimple, Moon } from "@phosphor-icons/react/dist/ssr";
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { BellSimple } from "@phosphor-icons/react/dist/ssr";
+import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
+import { useSession } from "next-auth/react";
 
 const nanum = Nanum_Pen_Script({
     subsets: ['latin'],
     weight: '400',
-})
+});
 
 export function NavBar() {
+    const session = useSession();
+
     return (
         <nav className="flex items-center h-16 w-full">
             <div className="flex items-center pl-12 gap-3">
@@ -44,8 +47,9 @@ export function NavBar() {
                             <Tooltip>
                                 <TooltipTrigger>
                                     <Avatar className="h-9 w-9 cursor-pointer">
-                                        <AvatarImage src="https://avatars.githubusercontent.com/u/79483921?v=4" /> {/* Terá que dar get no usuário para pegar a imagem*/}
-                                    </Avatar></TooltipTrigger>
+                                        <AvatarImage src={session.data?.user?.image} /> {/* Terá que dar get no usuário para pegar a imagem*/}
+                                    </Avatar>
+                                </TooltipTrigger>
                                 <TooltipContent>
                                     <p>Minha Conta</p>
                                 </TooltipContent>
@@ -53,7 +57,7 @@ export function NavBar() {
                         </TooltipProvider>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="mr-3">
-                        <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+                        <DropdownMenuLabel>{session.data?.user?.name}</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Perfil</DropdownMenuItem>
                         <DropdownMenuItem>Configurações</DropdownMenuItem>
@@ -63,5 +67,5 @@ export function NavBar() {
                 </DropdownMenu>
             </div>
         </nav>
-    )
+    );
 }
