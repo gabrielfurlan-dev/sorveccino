@@ -1,8 +1,8 @@
 "use client"
 import { Nanum_Pen_Script } from "next/font/google";
 import { motion } from "framer-motion"
-import IceCream from "../../../images/ice-cream";
-import IceCreamCone from "../../../images/ice-cream-cone";
+import IceCream from "../../assets/ice-cream";
+import IceCreamCone from "../../assets/ice-cream-cone";
 
 const nanum = Nanum_Pen_Script({
     subsets: ["latin"],

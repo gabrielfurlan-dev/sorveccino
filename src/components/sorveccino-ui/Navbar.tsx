@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react";
-import LogoNavbar from "../../../images/logo-navbar";
+import LogoNavbar from "../../assets/logo-navbar";
 import { Nanum_Pen_Script } from "next/font/google";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, } from "@/components/ui/tooltip"
