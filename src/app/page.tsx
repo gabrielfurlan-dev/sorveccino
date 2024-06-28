@@ -6,18 +6,11 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { GoogleLogo } from "@phosphor-icons/react/dist/ssr";
 import Placard from "@/components/sorveccino-ui/Placard";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { SignIn } from "@/components/sign-in";
 
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const { data } = useSession();
-  const handleLogoutClick = () => signOut();
-  const handleLoginClick = () => {
-    signIn("google", {
-      callbackUrl: "http://localhost:3000/pdv/pedidos/todos",
-    });
-  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -68,9 +61,10 @@ export default function Home() {
             <Logo />
           </motion.div>
           <motion.div variants={variants2} className="flex w-full justify-center">
-            <Button variant="outline" className="w-[448px] h-[56px] gap-2" onClick={handleLoginClick}>
+            {/* <Button variant="outline" className="w-[448px] h-[56px] gap-2" onClick={handleLoginClick}>
               <GoogleLogo size={24} /> Entrar com Google
-            </Button>
+            </Button> */}
+            <SignIn />
           </motion.div>
         </motion.div>
       )}
