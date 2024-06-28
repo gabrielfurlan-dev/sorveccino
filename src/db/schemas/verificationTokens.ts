@@ -1,4 +1,5 @@
 import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import type { AdapterAccount } from "next-auth/adapters"
 
 export const verificationTokens = pgTable(
     "verificationToken",
