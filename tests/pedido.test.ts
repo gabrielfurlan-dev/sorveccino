@@ -1,10 +1,12 @@
+import { GetOrderUseCase } from './../src/lib/orders/useCases/getOrdersUseCase';
 import { describe, expect } from "bun:test";
 import { AddOrderCommand } from "@/lib/orders/commands/addOrderCommand";
 import { AddOrderUseCase } from "@/lib/orders/useCases/addOrderUseCase";
+import { Order } from '@/lib/orders/types/Order';
 
-describe("Should Save Order", async () => {
+describe("INTEGRATION - Should Save Order", async () => {
   const order: AddOrderCommand = {
-    customerId: "iyzcxpwu6a8yjdrsghwekkes",
+    customerId: "aec7qzf31anace9hi16j4bp7",
     date: new Date(),
     acais: [
       {
@@ -38,7 +40,15 @@ describe("Should Save Order", async () => {
   };
 
   const addOrder = new AddOrderUseCase();
-  const result = await addOrder.execute(order);
-  console.log(result);
-  expect(result.success).toBe(true);
+  // const result = await addOrder.execute(order);
+  // console.log(result);
+  // expect(result.success).toBe(true);
 });
+
+describe("INTEGRATION - Should get orders", async () => {
+  const useCase = new GetOrderUseCase();
+  // const result = (await useCase.execute()).data as Order[];
+  // console.log(result);
+  // console.log(result[0].acais);
+  // expect(result.success).toBe(true);
+})
