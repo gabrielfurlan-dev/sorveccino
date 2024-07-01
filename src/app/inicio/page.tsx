@@ -18,7 +18,7 @@ export default function InitialPage() {
     }, [status, router]);
 
     if (status === "loading") {
-        return <div>Loading...</div>; // ou algum indicador de carregamento
+        return <div>Carregando...</div>;
     }
 
     return (
