@@ -10,7 +10,7 @@ export function SignOut() {
 
     return (
         <form onSubmit={handleSignOut}>
-            <Button type="submit" variant="outline" className="w-[448px] h-[56px] gap-2">Sign out</Button>
+            <Button type="submit" variant="outline" className="w-[448px] h-[56px] gap-2">Sair</Button>
         </form>
     )
 }

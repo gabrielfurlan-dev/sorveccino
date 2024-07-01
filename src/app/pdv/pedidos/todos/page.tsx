@@ -23,7 +23,7 @@ const poppins = Poppins({
 export default function pedidos() {
     return (
         <div className="flex flex-col w-full h-[90vh]">
-            <NavBar />
+            <NavBar href="Pedidos" />
             <ResizablePanelGroup style={{ border: 0 }}
                 direction="horizontal"
                 className="w-full rounded-lg border"

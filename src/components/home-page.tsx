@@ -3,12 +3,10 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Loading from "../app/loading/loading";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { GoogleLogo } from "@phosphor-icons/react/dist/ssr";
 import Placard from "@/components/sorveccino-ui/Placard";
 import { SignIn } from "@/components/sign-in";
-import { SignOut } from "@/components/sign-out";
 import { Logo } from "@/assets/logo";
+import { Button } from "./ui/button";
 
 interface HomePageProps {
   session: any;
@@ -51,7 +49,7 @@ export default function HomePage({ session }: HomePageProps) {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center gap-4">
+    <div className="w-full h-screen flex flex-col items-center justify-center gap-4 bg-[#0a0a0a] text-[#fafafa]">
       <Loading isLoading={isLoading} />
       {!isLoading && (
         <motion.div
@@ -66,11 +64,15 @@ export default function HomePage({ session }: HomePageProps) {
           <motion.div variants={variants2} className="flex w-full justify-center">
             <Logo />
           </motion.div>
+          {session &&
+            <motion.div variants={variants2} className="flex w-full justify-center">
+              <Button variant="outline" className="w-[448px] h-[56px] gap-2" onClick={() => router.push('/inicio')}>
+                Acessar Página Inicial
+              </Button>
+            </motion.div>
+          }
           <motion.div variants={variants2} className="flex w-full justify-center">
-            {session?.user?.name}
-          </motion.div>
-          <motion.div variants={variants2} className="flex w-full justify-center">
-            {session ? <SignOut /> : <SignIn />}
+            {!session && <SignIn />}
           </motion.div>
         </motion.div>
       )}

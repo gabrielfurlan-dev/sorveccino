@@ -18,7 +18,7 @@ export function LayoutPedidos() {
 
     return (
         <div className="flex h-full flex-col justify-between">
-            <div className="flex flex-col py-12 pl-12 gap-4">
+            <div className="flex flex-col pt-6 pb-12 pl-12 gap-4">
                 <span className="text-3xl font-bold">Pedidos</span>
                 <Table>
                     <TableHeader>
