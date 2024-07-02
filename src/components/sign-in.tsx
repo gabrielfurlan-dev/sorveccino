@@ -5,11 +5,11 @@ import { GoogleLogo } from "@phosphor-icons/react/dist/ssr";
 import { useRouter } from "next/navigation";
 
 export function SignIn() {
-  const router = useRouter()
+  // const router = useRouter()
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await signInWithGoogle();
-    router.push('/inicio')
+    // router.push('/inicio')
   };
 
   return (

@@ -14,6 +14,7 @@ import {
 import { LayoutPedidos } from "./layouts/layoutPedido";
 import { NavBar } from "@/components/sorveccino-ui/Navbar";
 import { Poppins } from "next/font/google";
+import { db } from "@/db/connection";
 
 const poppins = Poppins({
     subsets: ["latin"],
