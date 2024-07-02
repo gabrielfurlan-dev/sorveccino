@@ -3,7 +3,7 @@ import { AddOrderCommand } from "@/lib/orders/commands/addOrderCommand";
 import { IOrderRepository } from "@/lib/orders/interfaces/iOrderRepository";
 import { customers, orders } from "@/db/schemas";
 import { addOrderResult } from "@/lib/orders/results/addOrderResult";
-import { Order } from "../types/Order";
+import { Order } from "../types/order";
 import { eq } from "drizzle-orm";
 import { Acai } from "../types/Acai";
 

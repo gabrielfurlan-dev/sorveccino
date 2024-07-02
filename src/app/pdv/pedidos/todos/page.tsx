@@ -1,8 +1,9 @@
+"use client"
 import {
     ResizableHandle,
     ResizablePanel,
     ResizablePanelGroup,
-} from "@/components/ui/resizable"
+} from "@/components/ui/resizable";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -10,18 +11,45 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/components/ui/breadcrumb";
 import { LayoutPedidos } from "./layouts/layoutPedido";
 import { NavBar } from "@/components/sorveccino-ui/Navbar";
 import { Poppins } from "next/font/google";
-import { db } from "@/db/connection";
+import { useEffect, useState } from "react";
 
 const poppins = Poppins({
     subsets: ["latin"],
     weight: '400',
 });
 
-export default function pedidos() {
+interface Item {
+    id: string;
+    nome: string;
+    categoria: string;
+    preco: number;
+}
+
+export default function Pedidos() {
+    const [items, setItems] = useState<Item[]>([]); 
+
+    useEffect(() => {
+        async function fetchItems() {
+            console.log()
+            try {
+                const response = await fetch('/api/item/itens');
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar itens');
+                }
+                const data = await response.json();
+                console.log(data)
+                setItems(data);
+            } catch (error) {
+                console.error('Erro ao buscar itens:', error);
+            }
+        }
+        fetchItems();
+    }, []);
+
     return (
         <div className="flex flex-col w-full h-[90vh]">
             <NavBar href="Pedidos" />
@@ -48,7 +76,7 @@ export default function pedidos() {
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
-                        <Itens />
+                        <Itens items={items} />
                     </div>
                 </ResizablePanel>
             </ResizablePanelGroup>
@@ -56,11 +84,16 @@ export default function pedidos() {
     )
 }
 
-export function Itens() {
+function Itens({ items }: { items: Item[] }) {
     return (
-        <ResizablePanel className="border-[1.5px] border-solid rounded-lg mt-4 mr-6">
+        <ResizablePanel className="border-[1.5px] border-solid rounded-lg mt-4 mr-6 h-48">
             <div className="px-12 pt-5">
                 <h1 className={`text-3xl font-semibold`}>Itens</h1>
+                <ul>
+                    {items.map(item => (
+                        <li className="text-white" key={item.id}>{item.nome} - {item.categoria} - ${item.preco}</li>
+                    ))}
+                </ul>
             </div>
             <div></div>
         </ResizablePanel>
