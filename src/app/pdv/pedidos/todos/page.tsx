@@ -36,7 +36,7 @@ export default function Pedidos() {
         async function fetchItems() {
             console.log()
             try {
-                const response = await fetch('/api/item/itens');
+                const response = await fetch('/api/item');
                 if (!response.ok) {
                     throw new Error('Erro ao buscar itens');
                 }
