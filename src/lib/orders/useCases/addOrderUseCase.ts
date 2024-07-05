@@ -10,9 +10,18 @@ export class AddOrderUseCase {
     this.repo = repo;
   }
 
+  private calculateTotal(order: AddOrderCommand) {
+    return order.acais.reduce((total, acai) => total + acai.price, 0);
+  }
+
   public async execute(order: AddOrderCommand): Promise<iCommandResult> {
     try {
-      const result = await this.repo.save(order);
+      
+      const result = await this.repo.save({
+        ...order,
+        total: this.calculateTotal(order),
+      });
+
       return {
         success: true,
         message: "Order created",
@@ -27,4 +36,3 @@ export class AddOrderUseCase {
     }
   }
 }
-

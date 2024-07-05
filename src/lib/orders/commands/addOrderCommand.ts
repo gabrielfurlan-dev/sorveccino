@@ -1,11 +1,14 @@
 import { Adicional } from '@/lib/orders/types/Adicional';
 import { Embalagem } from '@/lib/orders/types/Embalagem';
+import { EOrderStatus } from '../types/EOrderStatus';
 
 export type AddOrderCommand = {
     customerId: string,
     date: Date,
     acais: AddAcaiCommand[],
-    discountCode?: string
+    discountCode?: string,
+    status: EOrderStatus,
+    total?: number,
 }
 
 type AddAcaiCommand = {
