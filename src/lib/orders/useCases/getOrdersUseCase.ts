@@ -1,4 +1,4 @@
-import { ICommandResult } from "@/lib/data/results/iCommandResult";
+import { Fail, ICommandResult, Success } from "@/lib/data/results/ICommandResult";
 import { IOrderRepository } from "@/lib/orders/interfaces/IOrderRepository";
 import { OrderRepository } from "@/lib/orders/repositories/orderRepository";
 
@@ -12,18 +12,9 @@ export class GetOrderUseCase {
   public async execute(): Promise<ICommandResult> {
     try {
       const result = await this.repo.getAll();
-      return {
-        success: true,
-        message: "Orders found",
-        data: result,
-      };
+      return Success("Orders found", result);
     } catch (error) {
-      return {
-        success: false,
-        message: `Unable to find orders. ${error}`,
-        data: [],
-      };
+      return Fail(`Unable to find orders. ${error}`, [])
     }
   }
 }
-

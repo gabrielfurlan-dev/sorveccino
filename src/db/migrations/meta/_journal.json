@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1719329253992,
-      "tag": "0000_whole_piledriver",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1719360018061,
-      "tag": "0001_nebulous_slyde",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1720131251449,
-      "tag": "0002_dark_radioactive_man",
+      "when": 1720267451842,
+      "tag": "0000_legal_winter_soldier",
       "breakpoints": true
     }
   ]

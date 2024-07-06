@@ -1,7 +1,8 @@
 import { EOrderStatus } from "@/lib/orders/enums/EOrderStatus";
 import { Acai } from "@/lib/orders/types/Acai";
 
-export type AddOrderCommand = {
+export type UpdateOrderCommand = {
+  id: string;
   customerId: string;
   acais: Acai[];
   discountCode?: string;

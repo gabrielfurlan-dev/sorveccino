@@ -1,8 +1,8 @@
 
 export interface Aditional extends Item { 
-    nome: string,
-    categoria?: CategoriaAdicional,
-    preco: number
+    name: string,
+    category?: AditionalCategory,
+    price: number
 }
 
-export type CategoriaAdicional = 'Cremes' | 'Frutas' | 'Acompanhamentos'
+export type AditionalCategory = 'Cremes' | 'Frutas' | 'Acompanhamentos'

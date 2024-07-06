@@ -1,6 +1,6 @@
 interface Item {
     id?: string,
-    nome: string,
-    categoria?: string,
-    preco: number
+    name: string,
+    category?: string,
+    price: number
 }

@@ -1,7 +1,9 @@
-import { ICommandResult } from "@/lib/data/results/ICommandResult";
-import { AddOrderCommand } from "@/lib/orders/commands/addOrderCommand";
+import { Fail, ICommandResult, Success } from "@/lib/data/results/ICommandResult";
+import { AddOrderCommand } from "@/lib/orders/commands/AddOrderCommand";
 import { OrderRepository } from "@/lib/orders/repositories/orderRepository";
 import { IOrderRepository } from "@/lib/orders/interfaces/IOrderRepository";
+import { Order } from "@/lib/orders/types/Order";
+import { Aditional } from "@/lib/orders/types/Aditional";
 
 export class AddOrderUseCase {
   private repo: IOrderRepository;
@@ -14,36 +16,30 @@ export class AddOrderUseCase {
     try {
       const discount = this.repo.getDiscount(order.discountCode);
       const total = this.calculateTotal(order, discount);
-      const normalizedOrder = { ...order, total };
+      const normalizedOrder: Order = { ...order, total, createdAt: new Date() };
       const result = await this.repo.addOrder(normalizedOrder);
-
-      return {
-        success: true,
-        message: "Order created",
-        data: result,
-      };
+      return Success("Order created", result);
     } catch (error) {
-      return {
-        success: false,
-        message: `Unable to create order. ${error}`,
-        data: null,
-      };
+      return Fail(`Unable to create order. ${error}`, null);
     }
   }
 
   private calculateTotal(order: AddOrderCommand, discount: number = 0): number {
     let total = 0;
-    
+
     order.acais.forEach((acai) => {
       if (acai.sale) {
         total += acai.sale.price;
       } else {
-        const packagingPrice = acai.packaging.price;
-        const aditionalsPrice = acai.aditionals?.reduce((acc, aditional) => acc + aditional.preco,0) || 0;
-        total += packagingPrice + aditionalsPrice;
+        const aditionalsPrice = this.calculateAditionalsPrice(acai.aditionals ?? []);
+        total += acai.packaging.price + aditionalsPrice;
       }
     });
 
-    return total;
+    return total - discount;
+  }
+
+  private calculateAditionalsPrice(aditionals: Aditional[]): number {
+    return aditionals?.reduce((acc, aditional) => acc + aditional.price, 0) || 0
   }
 }

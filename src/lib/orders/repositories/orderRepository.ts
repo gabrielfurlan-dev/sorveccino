@@ -5,8 +5,9 @@ import { addOrderResult } from "@/lib/orders/results/addOrderResult";
 import { EOrderStatus } from "@/lib/orders/enums/EOrderStatus";
 import { ResumedOrder } from "@/lib/orders/types/ResumedOrder";
 import { Acai } from "@/lib/orders/types/Acai";
-import { Order } from "@/lib/orders/types/order";
+import { Order } from "@/lib/orders/types/Order";
 import { IOrderRepository } from "@/lib/orders/interfaces/IOrderRepository";
+import { UpdateOrderCommand } from "../commands/UpdateOrderCommand";
 
 export class OrderRepository implements IOrderRepository {
   getDiscount(discountCode?: string): number {
@@ -32,7 +33,7 @@ export class OrderRepository implements IOrderRepository {
     const normalizedResult: ResumedOrder[] = result.map((order) => {
       return {
         id: order.id,
-        clientName: order.customerId ?? "",
+        clientName: order.customerName,
         total: Number(order.total),
         createdAt: order.createdAt,
         clientAddress: "",
@@ -80,7 +81,7 @@ export class OrderRepository implements IOrderRepository {
       .values({
         id: command.id,
         acais: command.acais,
-        discountCode: command.discountCode,
+        discountCode: command.discountCode ?? "",
         customerId: command.customerId,
         createdAt: command.createdAt,
         total: command.total.toString(),
@@ -92,7 +93,7 @@ export class OrderRepository implements IOrderRepository {
     return result[0];
   }
 
-  async updateOrder(command: Order): Promise<void> {
+  async updateOrder(command: UpdateOrderCommand): Promise<void> {
     await db
       .update(orders)
       .set({

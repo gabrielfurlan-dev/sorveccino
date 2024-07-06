@@ -1,7 +1,7 @@
-import { ICommandResult } from '@/lib/data/results/iCommandResult';
-import { AddOrderCommand } from '@/lib/orders/commands/addOrderCommand';
+import { ICommandResult } from '@/lib/data/results/ICommandResult';
 import { IOrderRepository } from "@/lib/orders/interfaces/IOrderRepository";
 import { OrderRepository } from "@/lib/orders/repositories/orderRepository";
+import { UpdateOrderCommand } from '../commands/UpdateOrderCommand';
 
 export class UpdateOrderUseCase {
     private repo: IOrderRepository;
@@ -10,7 +10,7 @@ export class UpdateOrderUseCase {
         this.repo = repo;
     }
 
-    public async execute(order: AddOrderCommand): Promise<ICommandResult> {
+    public async execute(order: UpdateOrderCommand): Promise<ICommandResult> {
         try {
             const result = await this.repo.updateOrder(order);
             return {
