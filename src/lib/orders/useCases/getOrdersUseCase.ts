@@ -1,6 +1,6 @@
-import { iCommandResult } from "@/lib/data/results/iCommandResult";
-import { IOrderRepository } from "../interfaces/iOrderRepository";
-import { OrderRepository } from "../repositories/orderRepository";
+import { ICommandResult } from "@/lib/data/results/iCommandResult";
+import { IOrderRepository } from "@/lib/orders/interfaces/IOrderRepository";
+import { OrderRepository } from "@/lib/orders/repositories/orderRepository";
 
 export class GetOrderUseCase {
   private repo: IOrderRepository;
@@ -9,7 +9,7 @@ export class GetOrderUseCase {
     this.repo = repo;
   }
 
-  public async execute(): Promise<iCommandResult> {
+  public async execute(): Promise<ICommandResult> {
     try {
       const result = await this.repo.getAll();
       return {

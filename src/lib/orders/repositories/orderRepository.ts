@@ -1,16 +1,20 @@
+import { eq } from "drizzle-orm";
 import { db } from "@/db/connection";
-import { AddOrderCommand } from "@/lib/orders/commands/addOrderCommand";
-import { IOrderRepository } from "@/lib/orders/interfaces/iOrderRepository";
 import { customers, orders } from "@/db/schemas";
 import { addOrderResult } from "@/lib/orders/results/addOrderResult";
-import { Order } from "../types/order";
-import { eq } from "drizzle-orm";
-import { Acai } from "../types/Acai";
-import { ResumedOrder } from "../types/ResumedOrder";
-import { EOrderStatus } from "../types/EOrderStatus";
+import { EOrderStatus } from "@/lib/orders/enums/EOrderStatus";
+import { ResumedOrder } from "@/lib/orders/types/ResumedOrder";
+import { Acai } from "@/lib/orders/types/Acai";
+import { Order } from "@/lib/orders/types/order";
+import { IOrderRepository } from "@/lib/orders/interfaces/IOrderRepository";
 
 export class OrderRepository implements IOrderRepository {
-  async getAllResumed(): Promise<ResumedOrder[]> {
+  getDiscount(discountCode?: string): number {
+    //TODO: IMPLEMENTS
+    return 0;
+  }
+
+  async getAll(): Promise<ResumedOrder[]> {
     const result = await db
       .select({
         id: orders.id,
@@ -39,7 +43,7 @@ export class OrderRepository implements IOrderRepository {
     return normalizedResult;
   }
 
-  async getAll(): Promise<Order[]> {
+  async getById(orderId: string): Promise<Order> {
     const result = await db
       .select({
         id: orders.id,
@@ -48,42 +52,75 @@ export class OrderRepository implements IOrderRepository {
         customerId: orders.customerId,
         createdAt: orders.createdAt,
         customerName: customers.name,
+        total: orders.total,
+        status: orders.status,
       })
       .from(orders)
       .innerJoin(customers, eq(orders.customerId, customers.id))
+      .where(eq(orders.id, orderId))
+      .limit(1)
       .execute();
 
-    const normalizedResult: Order[] = result.map((order) => {
-      return {
-        id: order.id,
-        acais: order.acais as unknown as Acai[],
-        discountCode: order.discountCode ?? "",
-        customerName: order.customerId ?? "",
-        createdAt: order.createdAt,
-      } satisfies Order;
-    });
+    const normalizedResult: Order = {
+      id: result[0].id,
+      acais: result[0].acais as unknown as Acai[],
+      discountCode: result[0].discountCode ?? "",
+      customerId: result[0].customerId ?? "",
+      createdAt: result[0].createdAt,
+      total: Number(result[0].total),
+      status: result[0].status as EOrderStatus
+    } satisfies Order;
 
     return normalizedResult;
   }
-  
-  async save(order: AddOrderCommand): Promise<addOrderResult> {
+
+  async addOrder(command: Order): Promise<addOrderResult> {
     const result = await db
       .insert(orders)
       .values({
-        customerId: order.customerId,
-        acais: order.acais,
-        discountCode: order.discountCode,
+        id: command.id,
+        acais: command.acais,
+        discountCode: command.discountCode,
+        customerId: command.customerId,
+        createdAt: command.createdAt,
+        total: command.total.toString(),
+        status: command.status,
       })
-      .returning({
-        id: orders.id,
-        createdAt: orders.createdAt,
-        updatedAt: orders.updatedAt,
-        acais: orders.acais,
-        discountCode: orders.discountCode,
-        customerId: orders.customerId,
-      })
+      .returning()
       .execute();
 
     return result[0];
+  }
+
+  async updateOrder(command: Order): Promise<void> {
+    await db
+      .update(orders)
+      .set({
+        acais: command.acais,
+        discountCode: command.discountCode,
+        customerId: command.customerId,
+        total: command.total.toString(),
+        status: command.status,
+      })
+      .where(eq(orders.id, command.id))
+      .returning()
+      .execute();
+  }
+
+  async deleteOrder(orderId: string): Promise<void> {
+    await db
+      .delete(orders)
+      .where(eq(orders.id, orderId))
+      .returning()
+      .execute();
+  }
+
+  async updateStatus(orderId: string, status: EOrderStatus): Promise<void> {
+    await db
+      .update(orders)
+      .set({ status })
+      .where(eq(orders.id, orderId))
+      .returning()
+      .execute();
   }
 }

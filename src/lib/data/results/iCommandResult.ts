@@ -1,4 +1,4 @@
-export type iCommandResult = {
+export type ICommandResult = {
   success: boolean;
   message: string;
   data: any;

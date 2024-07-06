@@ -1,10 +1,10 @@
 import { Aditional } from "./Aditional";
-import { Packaging } from "./package";
-import { Sale } from "./Promocao";
+import { Packaging } from "./Packaging";
+import { Sale } from "./Sale";
 
-export interface Acai extends Item {
-    embalagem: Packaging,
-    aditionals?: Aditional[]
-    sale?: Sale,
-    notes?: string,
+export interface Acai {
+  packaging: Packaging;
+  aditionals?: Aditional[];
+  sale?: Sale;
+  notes?: string;
 }

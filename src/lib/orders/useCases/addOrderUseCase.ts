@@ -1,7 +1,7 @@
-import { iCommandResult } from "@/lib/data/results/iCommandResult";
-import { AddOrderCommand } from "../commands/addOrderCommand";
-import { IOrderRepository } from "../interfaces/iOrderRepository";
-import { OrderRepository } from "../repositories/orderRepository";
+import { ICommandResult } from "@/lib/data/results/ICommandResult";
+import { AddOrderCommand } from "@/lib/orders/commands/addOrderCommand";
+import { OrderRepository } from "@/lib/orders/repositories/orderRepository";
+import { IOrderRepository } from "@/lib/orders/interfaces/IOrderRepository";
 
 export class AddOrderUseCase {
   private repo: IOrderRepository;
@@ -10,17 +10,13 @@ export class AddOrderUseCase {
     this.repo = repo;
   }
 
-  private calculateTotal(order: AddOrderCommand) {
-    return order.acais.reduce(
-      (total, acai) => total + acai., 0
-    );
-  }
-
-  public async execute(order: AddOrderCommand): Promise<iCommandResult> {
+  public async execute(order: AddOrderCommand): Promise<ICommandResult> {
     try {
-      order = { ...order, total: this.calculateTotal(order) };
+      const discount = this.repo.getDiscount(order.discountCode);
+      const total = this.calculateTotal(order, discount);
+      const normalizedOrder = { ...order, total };
+      const result = await this.repo.addOrder(normalizedOrder);
 
-      const result = await this.repo.save(order);
       return {
         success: true,
         message: "Order created",
@@ -33,5 +29,21 @@ export class AddOrderUseCase {
         data: null,
       };
     }
+  }
+
+  private calculateTotal(order: AddOrderCommand, discount: number = 0): number {
+    let total = 0;
+    
+    order.acais.forEach((acai) => {
+      if (acai.sale) {
+        total += acai.sale.price;
+      } else {
+        const packagingPrice = acai.packaging.price;
+        const aditionalsPrice = acai.aditionals?.reduce((acc, aditional) => acc + aditional.preco,0) || 0;
+        total += packagingPrice + aditionalsPrice;
+      }
+    });
+
+    return total;
   }
 }

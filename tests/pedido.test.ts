@@ -11,10 +11,10 @@ describe("INTEGRATION - Should Save Order", async () => {
       {
         packaging: {
           id: "1",
-          categoria: "acai",
-          nome: "Copo",
+          category: "acai",
+          description: "Copo",
           tamanho: '330ml',
-          preco: 10,
+          price: 10,
         },
         additionals: [
           {

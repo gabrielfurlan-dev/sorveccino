@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EOrderStatusSchema } from "./EOrderStatus";
+import { EOrderStatusSchema } from "../enums/EOrderStatus";
 
 export const ResumedOrderSchema = z.object({
     id: z.string(),
