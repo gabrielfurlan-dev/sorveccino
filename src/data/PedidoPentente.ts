@@ -1,5 +1,5 @@
 import { Acai } from "@/lib/orders/types/Acai";
-import { Adicional } from "@/lib/orders/types/Adicional";
+import { Aditional } from "@/lib/orders/types/Adicional";
 import { Embalagem } from "@/lib/orders/types/Embalagem";
 
 export async function AdicionarAcai(acai: Acai): Promise<void> {}
@@ -45,7 +45,7 @@ export const ListaEmbalagens: Embalagem[] = [
   },
 ];
 
-export const ListaAdicionais: Adicional[] = [
+export const ListaAdicionais: Aditional[] = [
   { id: "1", categoria: "Acompanhamentos", nome: "Paçoca", preco: 2 },
   { id: "2", categoria: "Acompanhamentos", nome: "Granola", preco: 2 },
   {

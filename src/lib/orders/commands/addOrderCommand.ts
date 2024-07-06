@@ -1,6 +1,6 @@
-import { Adicional } from '@/lib/orders/types/Adicional';
-import { Embalagem } from '@/lib/orders/types/Embalagem';
+import { Aditional } from '../types/Aditional';
 import { EOrderStatus } from '../types/EOrderStatus';
+import { Packaging as Packaging } from '../types/package';
 
 export type AddOrderCommand = {
     customerId: string,
@@ -13,9 +13,9 @@ export type AddOrderCommand = {
 
 type AddAcaiCommand = {
     category?: string,
-    price: number,
-    packaging: Embalagem,
-    additionals?: Adicional[]
+    price?: number,
+    packaging: Packaging,
+    additionals?: Aditional[]
     saleId?: string,
     onservations?: string,
 }

@@ -1,7 +1,7 @@
 import { EDaysOfWeek } from "@/lib/date/EDaysOfWeek"
 
-export type Promocao = {
-    descontoPorcentagem: number,
-    nomePromocao: string,
-    diasDaSemana: EDaysOfWeek[]
+export type Sale = {
+    price: number,
+    description: string,
+    daysOfWeek: EDaysOfWeek[]
 }

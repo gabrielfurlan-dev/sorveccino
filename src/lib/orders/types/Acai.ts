@@ -1,10 +1,10 @@
-import { Adicional } from "./Adicional";
-import { Embalagem } from "./Embalagem";
-import { Promocao } from "./Promocao";
+import { Aditional } from "./Aditional";
+import { Packaging } from "./package";
+import { Sale } from "./Promocao";
 
 export interface Acai extends Item {
-    embalagem: Embalagem,
-    adicionais?: Adicional[]
-    promocao?: Promocao,
-    onservacoes?: string,
+    embalagem: Packaging,
+    aditionals?: Aditional[]
+    sale?: Sale,
+    notes?: string,
 }

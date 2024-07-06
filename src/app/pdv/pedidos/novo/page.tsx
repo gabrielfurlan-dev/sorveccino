@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Plus, X } from "@phosphor-icons/react/dist/ssr";
-import { Adicional } from "@/lib/orders/types/Adicional";
+import { Aditional } from "@/lib/orders/types/Adicional";
 import { ListaAdicionais } from "@/data/PedidoPentente";
 import { Controller, Control } from "react-hook-form";
 import { z } from "zod";
@@ -80,9 +80,9 @@ export function ComboBoxAdicionaisHookForm({
         const { onChange, value = [] } = field;
         const nonNullValue = value.filter(
           (item) => item !== null
-        ) as Adicional[];
+        ) as Aditional[];
 
-        const addItem = (adicional: Adicional) => {
+        const addItem = (adicional: Aditional) => {
           if (!nonNullValue.some((item) => item.id === adicional.id)) {
             onChange([...nonNullValue, adicional]);
           }
@@ -95,7 +95,7 @@ export function ComboBoxAdicionaisHookForm({
         return (
           <Popover>
             <div>
-              {nonNullValue.map((adicional: Adicional) => (
+              {nonNullValue.map((adicional: Aditional) => (
                 <div
                   key={adicional.nome}
                   className="flex flex-row justify-between items-center gap-2"
@@ -129,7 +129,7 @@ export function ComboBoxAdicionaisHookForm({
                 <CommandList>
                   <CommandEmpty>Nenhum adicional encontrado.</CommandEmpty>
                   <CommandGroup>
-                    {ListaAdicionais.map((adicional: Adicional) => (
+                    {ListaAdicionais.map((adicional: Aditional) => (
                       <CommandItem
                         key={adicional.id}
                         value={adicional.id}
