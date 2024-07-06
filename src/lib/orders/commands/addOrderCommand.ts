@@ -5,6 +5,6 @@ export type AddOrderCommand = {
   customerId: string;
   acais: Acai[];
   discountCode?: string;
-  total: number;
+  total?: number;
   status: EOrderStatus;
 };

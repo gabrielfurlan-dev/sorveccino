@@ -3,7 +3,7 @@ import { EOrderStatusSchema } from "../enums/EOrderStatus"
 import { AcaiSchema } from "./Acai"
 
 export const OrderSchema = z.object({
-    id: z.string(),
+    id: z.string().nullable(),
     customerId: z.string(),
     createdAt: z.date().nullable(),
     acais: z.array(AcaiSchema),

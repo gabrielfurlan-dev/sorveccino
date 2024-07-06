@@ -78,7 +78,6 @@ export class OrderRepository implements IOrderRepository {
     const result = await db
       .insert(orders)
       .values({
-        id: command.id,
         acais: command.acais,
         discountCode: command.discountCode ?? "",
         customerId: command.customerId,
@@ -106,7 +105,7 @@ export class OrderRepository implements IOrderRepository {
       .execute();
   }
 
-  async deleteOrder(orderId: string): Promise<void> {
+  async removeOrder(orderId: string): Promise<void> {
     await db
       .delete(orders)
       .where(eq(orders.id, orderId))

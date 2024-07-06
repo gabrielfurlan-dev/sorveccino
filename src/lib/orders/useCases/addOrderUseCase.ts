@@ -15,9 +15,8 @@ export class AddOrderUseCase {
   public async execute(order: AddOrderCommand): Promise<ICommandResult> {
     try {
       const discount = this.repo.getDiscount(order.discountCode);
-      const total = this.calculateTotal(order, discount);
-      const normalizedOrder: Order = { ...order, total, createdAt: new Date() };
-      const result = await this.repo.addOrder(normalizedOrder);
+      order.total = this.calculateTotal(order, discount);
+      const result = await this.repo.addOrder(order);
       return Success("Order created", result);
     } catch (error) {
       return Fail(`Unable to create order. ${error}`, null);

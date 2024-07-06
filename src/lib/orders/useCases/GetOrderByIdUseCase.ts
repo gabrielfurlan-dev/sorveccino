@@ -1,6 +1,6 @@
 import { Fail, ICommandResult, Success } from "@/lib/data/results/ICommandResult";
 import { IOrderRepository } from "@/lib/orders/interfaces/IOrderRepository";
-import { OrderRepository } from "@/lib/orders/repositories/orderRepository";
+import { OrderRepository } from "@/lib/orders/repositories/OrderRepository";
 
 export class GetOrderByIdUseCase {
   private repo: IOrderRepository;
