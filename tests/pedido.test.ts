@@ -5,6 +5,7 @@ import { AddOrderUseCase } from "@/lib/orders/useCases/AddOrderUseCase";
 import { Order } from "@/lib/orders/types/Order";
 import { GetOrderByIdUseCase } from "@/lib/orders/useCases/GetOrderByIdUseCase";
 import { UpdateStatusOrderUseCase } from "@/lib/orders/useCases/UpdateStatusOrderUseCase";
+import { RemoveOrderUseCase } from "@/lib/orders/useCases/RemoveOrderUseCase";
 
 describe("INTEGRATION - Should Save Order", async () => {
   const order: AddOrderCommand = {
@@ -60,6 +61,13 @@ describe("INTEGRATION - Should get order by id", async () => {
 describe("INTEGRATION - Should update order status", async () => {
   // const useCase = new UpdateStatusOrderUseCase();
   // const result = await useCase.execute("qzg0quwl6ko6vabsqlpymgjw", "completed");
+  // console.log(result.message);
+  // expect(result.success).toBe(true);
+})
+
+describe("INTEGRATION - Should remove order", async () => {
+  // const useCase = new RemoveOrderUseCase();
+  // const result = await useCase.execute("m1x16ihkqcvs3igviraoa569");
   // console.log(result.message);
   // expect(result.success).toBe(true);
 })
