@@ -1,8 +1,10 @@
+import { z } from "zod";
+import { AditionalCategorySchema } from "@/lib/orders/enums/EAditionalCategory";
 
-export interface Aditional extends Item { 
-    name: string,
-    category?: AditionalCategory,
-    price: number
-}
+export const AditionalSchema = z.object({
+  name: z.string(),
+  category: AditionalCategorySchema.nullable(),
+  price: z.number(),
+});
 
-export type AditionalCategory = 'Cremes' | 'Frutas' | 'Acompanhamentos'
+export type Aditional = z.infer<typeof AditionalSchema>;

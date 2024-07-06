@@ -9,6 +9,7 @@ describe("INTEGRATION - Should Save Order", async () => {
     customerId: "wo91d9ww31dyyskpbja1cva0",
     acais: [
       {
+        sale: null,
         packaging: {
           category: "acai",
           description: "Copo",
@@ -34,10 +35,10 @@ describe("INTEGRATION - Should Save Order", async () => {
     status: "pending",
   };
 
-  // const addOrder = new AddOrderUseCase();
-  // const result = await addOrder.execute(order);
-  // console.log(result);
-  // expect(result.success).toBe(true);
+  const addOrder = new AddOrderUseCase();
+  const result = await addOrder.execute(order);
+  console.log(result);
+  expect(result.success).toBe(true);
 });
 
 describe("INTEGRATION - Should get orders", async () => {

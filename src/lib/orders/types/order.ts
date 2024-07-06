@@ -1,12 +1,15 @@
-import { EOrderStatus } from "../enums/EOrderStatus"
-import { Acai } from "./Acai"
+import { z } from "zod"
+import { EOrderStatusSchema } from "../enums/EOrderStatus"
+import { AcaiSchema } from "./Acai"
 
-export type Order = {
-    id?: string,
-    customerId: string,
-    createdAt?: Date,
-    acais: Acai[],
-    discountCode?: string,
-    status: EOrderStatus,
-    total: number
-}
+export const OrderSchema = z.object({
+    id: z.string(),
+    customerId: z.string(),
+    createdAt: z.date().nullable(),
+    acais: z.array(AcaiSchema),
+    discountCode: z.string(),
+    status: EOrderStatusSchema,
+    total: z.number(),
+})
+
+export type Order = z.infer<typeof OrderSchema>

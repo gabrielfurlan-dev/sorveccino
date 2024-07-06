@@ -83,7 +83,6 @@ export class OrderRepository implements IOrderRepository {
         acais: command.acais,
         discountCode: command.discountCode ?? "",
         customerId: command.customerId,
-        createdAt: command.createdAt,
         total: command.total.toString(),
         status: command.status,
       })
