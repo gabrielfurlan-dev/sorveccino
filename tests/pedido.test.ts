@@ -7,7 +7,7 @@ import { GetOrderByIdUseCase } from "@/lib/orders/useCases/GetOrderByIdUseCase";
 import { UpdateStatusOrderUseCase } from "@/lib/orders/useCases/UpdateStatusOrderUseCase";
 import { RemoveOrderUseCase } from "@/lib/orders/useCases/RemoveOrderUseCase";
 
-describe("INTEGRATION - Should Save Order", async () => {
+describe("INTEGRATION - Should add Order", async () => {
   const order: AddOrderCommand = {
     customerId: "wo91d9ww31dyyskpbja1cva0",
     acais: [
