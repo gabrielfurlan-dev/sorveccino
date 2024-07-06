@@ -59,7 +59,6 @@ export class OrderRepository implements IOrderRepository {
       .from(orders)
       .innerJoin(customers, eq(orders.customerId, customers.id))
       .where(eq(orders.id, orderId))
-      .limit(1)
       .execute();
 
     const normalizedResult: Order = {
