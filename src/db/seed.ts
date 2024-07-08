@@ -9,6 +9,16 @@ console.log("deleting customers...");
 
 const [customer] = await db.insert(customers).values({
     name: faker.person.fullName(),
+    cpf: "719.207.030-04",
+    email: faker.internet.email(),
+    phone: faker.phone.number(),
+    zipCode: faker.location.zipCode(),
+    address: faker.location.street(),
+    city: faker.location.city(),
+    state: faker.location.state(),
+    number: faker.location.buildingNumber(),
+    complement: faker.location.secondaryAddress(),
+    neighborhood: faker.location.county()
 }).returning({
     id: customers.id
 })

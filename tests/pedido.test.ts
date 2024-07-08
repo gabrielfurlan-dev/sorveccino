@@ -1,7 +1,7 @@
-import { GetOrdersUseCase } from "../src/lib/orders/useCases/GetOrdersUseCase";
+import { GetOrdersUseCase } from "../src/lib/orders/useCases/getOrdersUseCase";
 import { describe, expect } from "bun:test";
-import { AddOrderCommand } from "@/lib/orders/commands/AddOrderCommand";
-import { AddOrderUseCase } from "@/lib/orders/useCases/AddOrderUseCase";
+import { AddOrderCommand } from "@/lib/orders/commands/addOrderCommand";
+import { AddOrderUseCase } from "@/lib/orders/useCases/addOrderUseCase";
 import { Order } from "@/lib/orders/types/Order";
 import { GetOrderByIdUseCase } from "@/lib/orders/useCases/GetOrderByIdUseCase";
 import { UpdateStatusOrderUseCase } from "@/lib/orders/useCases/UpdateStatusOrderUseCase";

@@ -34,23 +34,23 @@ interface Item {
 export default function Pedidos() {
     const [items, setItems] = useState<Item[]>([]);
 
-    useEffect(() => {
-        async function fetchItems() {
-            console.log()
-            try {
-                const response = await fetch('/api/item');
-                if (!response.ok) {
-                    throw new Error('Erro ao buscar itens');
-                }
-                const data = await response.json();
-                console.log(data)
-                setItems(data);
-            } catch (error) {
-                console.error('Erro ao buscar itens:', error);
-            }
-        }
-        fetchItems();
-    }, []);
+    // useEffect(() => {
+    //     async function fetchItems() {
+    //         console.log()
+    //         try {
+    //             const response = await fetch('/api/item');
+    //             if (!response.ok) {
+    //                 throw new Error('Erro ao buscar itens');
+    //             }
+    //             const data = await response.json();
+    //             console.log(data)
+    //             setItems(data);
+    //         } catch (error) {
+    //             console.error('Erro ao buscar itens:', error);
+    //         }
+    //     }
+    //     fetchItems();
+    // }, []);
 
     return (
         <div className="flex flex-col w-full h-[90vh]">
@@ -91,14 +91,14 @@ function Itens({ items }: { items: Item[] }) {
         <ResizablePanel className="border-[1.5px] border-solid rounded-lg mt-4 mr-6">
             <div className="px-12 pt-5">
                 <h1 className={`text-3xl font-semibold pb-5`}>Itens</h1>
-                <div className="pl-3">
+                {/* <div className="pl-3">
                     {items.map(item => (
                         <div className="text-white h-16" key={item.id}>
 
                             {item.nome} - {item.categoria} - ${item.preco}
                         </div>
                     ))}
-                </div>
+                </div> */}
                 <div className="flex pl-3 border-t-2 h-[70px]">
                     <div className="flex items-center w-full">
                         <div className="px-3">

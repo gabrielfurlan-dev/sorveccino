@@ -82,7 +82,7 @@ export function NavBar({ href }: Navbar) {
                         <DropdownMenuItem>Perfil</DropdownMenuItem>
                         <DropdownMenuItem>Configurações</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleSignOut}>Sair</DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer" onClick={handleSignOut}>Sair</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
