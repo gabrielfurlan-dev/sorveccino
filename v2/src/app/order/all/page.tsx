@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { use } from "react";
+import { Structure } from "@/components/sorveccino-ui/structure";
 
 export default function Order() {
   const orders = use(OrderUseCases.GetAll());
@@ -26,8 +27,8 @@ export default function Order() {
   };
 
   return (
-    <div className="flex flex-col w-full h-[100vh]">
-      <div className="px-20 pt-14">
+    <Structure>
+      <div className="px-20">
         <h1>Todos os pedidos</h1>
         <div className="mt-4 max-h-[70vh] overflow-y-auto px-20">
           <Table>
@@ -58,6 +59,6 @@ export default function Order() {
         </div>
       </div>
       <Footer total={formatCurrency(totalAmount)} />
-    </div>
+    </Structure>
   );
 }

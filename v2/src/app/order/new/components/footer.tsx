@@ -13,22 +13,22 @@ export function Footer() {
       </div>
       <div className="flex gap-x-4 ml-auto">
         <Link
-          className="bg-transparent border-orange-900 text-[13px] hover:bg-orange-900 hover:border-orange-900 h-[45px] rounded-lg w-[160px] border-2"
+          className=""
           href={"/order/all"}
         >
-          Voltar
+          <button className="bg-transparent hover:text-white border-orange-900 text-[13px] hover:bg-orange-900 hover:border-orange-900 h-[45px] rounded-lg w-[160px] border-2">Voltar</button>
         </Link>
         <Link
-          className="bg-transparent border-red-900 text-[13px] hover:bg-red-900 hover:border-red-900 h-[45px] rounded-lg w-[160px] border-2"
+          className=""
           href={"/order/new"}
         >
-          Excluir
+          <button className="bg-transparent hover:text-white border-red-900 text-[13px] hover:bg-red-900 hover:border-red-900 h-[45px] rounded-lg w-[160px] border-2">Voltar</button>
         </Link>
         <Link
-          className="bg-transparent border-green-900 text-[13px] hover:bg-green-900 hover:border-green-900 h-[45px] rounded-lg w-[160px] border-2"
+          className=""
           href={"/order/new"}
         >
-          Salvar
+          <button className="bg-transparent hover:text-white border-green-900 text-[13px] hover:bg-green-900 hover:border-green-900 h-[45px] rounded-lg w-[160px] border-2">Salvar</button>
         </Link>
       </div>
     </div>
