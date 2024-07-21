@@ -1,4 +1,4 @@
-import Order from "./order/orders/page";
+import Order from "@/app/order/all/page";
 
 export default async function Home() {
   return (
