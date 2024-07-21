@@ -7,7 +7,17 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { tv } from "tailwind-variants";
 
-export function Footer() {
+type FooterProps = {
+  orderDescription: string;
+  customerName: string;
+  customerNotes: string;
+};
+
+export function Footer({
+  orderDescription,
+  customerName: customerClient,
+  customerNotes,
+}: FooterProps) {
   const footerButtonsStyle = tv({
     base: "dark:text-white flex items-center justify-center text-black bg-transparent text-[13px] h-[45px] rounded-lg w-[160px] border-2",
     variants: {
@@ -29,11 +39,11 @@ export function Footer() {
     try {
       await addOrder({
         id: "1",
-        total: 100,
+        total: 0,
         createdAt: new Date(),
         totalToRecieve: 100,
-        customer: { name: "Cristiano Ronaldo", notes: "Teste" },
-        description: "Teste",
+        customer: { name: customerClient, notes: customerNotes },
+        description: orderDescription,
       });
       toast.success("Pedido adicionado.");
     } catch (error) {
@@ -52,13 +62,22 @@ export function Footer() {
         <h1 className="font-semibold text-[20px]">R$ 80,00</h1>
       </div>
       <div className="flex gap-x-4 ml-auto">
-        <Link className={footerButtonsStyle({ type: "back" })} href={"/order/all"}>
+        <Link
+          className={footerButtonsStyle({ type: "back" })}
+          href={"/order/all"}
+        >
           Voltar
         </Link>
-        <Link className={footerButtonsStyle({ type: "delete" })} href={"/order/new"}>
+        <Link
+          className={footerButtonsStyle({ type: "delete" })}
+          href={"/order/new"}
+        >
           Excluir
         </Link>
-        <Button className={footerButtonsStyle({ type: "save" })} onClick={handleAddOrder}>
+        <Button
+          className={footerButtonsStyle({ type: "save" })}
+          onClick={handleAddOrder}
+        >
           Salvar
         </Button>
       </div>
