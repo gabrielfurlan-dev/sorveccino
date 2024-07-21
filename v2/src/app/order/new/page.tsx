@@ -3,11 +3,12 @@ import { Label } from "@/components/ui/label"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { Textarea } from "@/components/ui/textarea"
 import { Footer } from "./components/footer"
+import { Structure } from "@/components/sorveccino-ui/structure"
 
 export default function NewOrder() {
     return (
-        <div className="flex flex-col w-full h-[100vh]">
-            <div className="px-20 pt-14 h-[80vh]">
+        <Structure>
+            <div className="px-20 h-[80vh]">
                 <ResizablePanelGroup direction="horizontal">
                     <ResizablePanel>
                         <h1 className="text-xl">Descrição do Pedido</h1>
@@ -32,6 +33,6 @@ export default function NewOrder() {
                 </ResizablePanelGroup>
             </div>
             <Footer />
-        </div>
+        </Structure>
     )
 }

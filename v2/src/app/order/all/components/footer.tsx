@@ -13,10 +13,11 @@ export function Footer({ total }: FooterProps) {
       </div>
       <div className="absolute right-20">
         <Link
-          className="bg-transparent border-neutral-100 text-[13px] hover:bg-purple-900 hover:border-purple-900 h-[45px] rounded-lg w-[160px] border-2"
+          className=""
           href={"/order/new"}
         >
-          Novo
+          <button className="bg-transparent border-neutral-100 text-[13px] hover:bg-purple-900 hover:border-purple-900 h-[45px] rounded-lg w-[160px] border-2">Novo</button>
+
         </Link>
       </div>
     </div>
