@@ -1,4 +1,5 @@
-import { OrderUseCases } from "@/lib/Backend/UseCases/OrderUseCases";
+"use client";
+
 import { Footer } from "./components/footer";
 import {
   Table,
@@ -9,11 +10,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { use } from "react";
+import { GetAll } from "@/lib/Backend/UseCases/OrderUseCases";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Order() {
-  const orders = use(OrderUseCases.GetAll());
-  const totalAmount = orders.reduce(
+  const { data: orders } = useQuery({
+    queryKey: ["orders"],
+    queryFn: GetAll,
+  });
+
+  const totalAmount = orders?.reduce(
     (acc, order) => acc + order.totalToRecieve,
     0
   );
@@ -42,22 +48,23 @@ export default function Order() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="font-medium">{order.id}</TableCell>
-                  <TableCell>{order.customer.name}</TableCell>
-                  <TableCell>{order.createdAt.toISOString()}</TableCell>
-                  <TableCell className="text-right">{order.total}</TableCell>
-                  <TableCell className="text-right">
-                    {order.totalToRecieve}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {orders &&
+                orders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell className="font-medium">{order.id}</TableCell>
+                    <TableCell>{order.customer.name}</TableCell>
+                    <TableCell>{order.createdAt.toISOString()}</TableCell>
+                    <TableCell className="text-right">{order.total}</TableCell>
+                    <TableCell className="text-right">
+                      {order.totalToRecieve}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </div>
       </div>
-      <Footer total={formatCurrency(totalAmount)} />
+      <Footer total={formatCurrency(totalAmount ?? 0)} />
     </div>
   );
 }

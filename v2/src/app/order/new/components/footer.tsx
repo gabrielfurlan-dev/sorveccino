@@ -1,6 +1,46 @@
+"use client";
+import { Button } from "@/components/ui/button";
+import { Add } from "@/lib/Backend/UseCases/OrderUseCases";
+import { queryClient } from "@/lib/utils/reactQuery";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
+import { toast } from "sonner";
+import { tv } from "tailwind-variants";
 
 export function Footer() {
+  const footerButtonsStyle = tv({
+    base: "dark:text-white flex items-center justify-center text-black bg-transparent text-[13px] h-[45px] rounded-lg w-[160px] border-2",
+    variants: {
+      type: {
+        back: "border-orange-900 hover:bg-orange-900 hover:border-orange-900",
+        save: "border-green-900 hover:bg-green-900 hover:border-green-900",
+        delete: "border-red-900 hover:bg-red-900 hover:border-red-900",
+      },
+    },
+  });
+  const { mutateAsync: addOrder } = useMutation({
+    mutationFn: Add,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+
+  async function handleAddOrder() {
+    try {
+      await addOrder({
+        id: "1",
+        total: 100,
+        createdAt: new Date(),
+        totalToRecieve: 100,
+        customer: { name: "Cristiano Ronaldo", notes: "Teste" },
+        description: "Teste",
+      });
+      toast.success("Pedido adicionado.");
+    } catch (error) {
+      toast.error("Ocorreu um erro ao adicionar o pedido.");
+    }
+  }
+
   return (
     <div className="flex w-full px-20 items-center py-2 mt-auto fixed bottom-10">
       <div className="flex flex-col justify-center">
@@ -12,24 +52,15 @@ export function Footer() {
         <h1 className="font-semibold text-[20px]">R$ 80,00</h1>
       </div>
       <div className="flex gap-x-4 ml-auto">
-        <Link
-          className="bg-transparent border-orange-900 text-[13px] hover:bg-orange-900 hover:border-orange-900 h-[45px] rounded-lg w-[160px] border-2"
-          href={"/order/all"}
-        >
+        <Link className={footerButtonsStyle({ type: "back" })} href={"/order/all"}>
           Voltar
         </Link>
-        <Link
-          className="bg-transparent border-red-900 text-[13px] hover:bg-red-900 hover:border-red-900 h-[45px] rounded-lg w-[160px] border-2"
-          href={"/order/new"}
-        >
+        <Link className={footerButtonsStyle({ type: "delete" })} href={"/order/new"}>
           Excluir
         </Link>
-        <Link
-          className="bg-transparent border-green-900 text-[13px] hover:bg-green-900 hover:border-green-900 h-[45px] rounded-lg w-[160px] border-2"
-          href={"/order/new"}
-        >
+        <Button className={footerButtonsStyle({ type: "save" })} onClick={handleAddOrder}>
           Salvar
-        </Link>
+        </Button>
       </div>
     </div>
   );
