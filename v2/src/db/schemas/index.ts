@@ -1,2 +1,1 @@
-export * from './orders'
-export * from './customers'
+export function a(){}
