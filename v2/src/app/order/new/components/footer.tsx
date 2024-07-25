@@ -81,7 +81,11 @@ export function Footer({ control, onSubmit }: FooterProps) {
         >
           Excluir
         </Link>
-        <Button type="submit" onClick={onSubmit} className={footerButtonsStyle({ type: "save" })}>
+        <Button
+          type="submit"
+          onClick={onSubmit}
+          className={footerButtonsStyle({ type: "save" })}
+        >
           Salvar
         </Button>
       </div>
