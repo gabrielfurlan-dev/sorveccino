@@ -10,7 +10,7 @@ const getNanum = Nanum_Pen_Script({
 export function NavBar() {
     return (
         <div className="fixed top-0 left-0 w-full py-3 flex items-center justify-center">
-            <div className="mx-12 h-14 border-2 w-full rounded-lg px-5 flex justify-between items-center">
+            <div className="mx-12 h-14 w-full rounded-lg px-5 flex justify-between items-center">
                 <div className="flex gap-x-2 items-center">
                     <LogoNavbar />
                     <h1 className={`${getNanum.className} text-2xl`}>Sorveccino</h1>

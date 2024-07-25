@@ -1,13 +1,24 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Add } from "@/lib/Backend/UseCases/OrderUseCases";
-import { queryClient } from "@/lib/utils/reactQuery";
-import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { toast } from "sonner";
+import { Control } from "react-hook-form";
 import { tv } from "tailwind-variants";
+import { NewOrderForm } from "@/app/order/new/page";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-export function Footer() {
+type FooterProps = {
+  control: Control<NewOrderForm>;
+  onSubmit: () => void;
+};
+
+export function Footer({ control, onSubmit }: FooterProps) {
   const footerButtonsStyle = tv({
     base: "dark:text-white flex items-center justify-center text-black bg-transparent text-[13px] h-[45px] rounded-lg w-[160px] border-2",
     variants: {
@@ -18,47 +29,59 @@ export function Footer() {
       },
     },
   });
-  const { mutateAsync: addOrder } = useMutation({
-    mutationFn: Add,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
-    },
-  });
-
-  async function handleAddOrder() {
-    try {
-      await addOrder({
-        id: "1",
-        total: 100,
-        createdAt: new Date(),
-        totalToRecieve: 100,
-        customer: { name: "Cristiano Ronaldo", notes: "Teste" },
-        description: "Teste",
-      });
-      toast.success("Pedido adicionado.");
-    } catch (error) {
-      toast.error("Ocorreu um erro ao adicionar o pedido.");
-    }
-  }
 
   return (
     <div className="flex w-full px-20 items-center py-2 mt-auto fixed bottom-10">
-      <div className="flex flex-col justify-center">
-        <h3 className="text-[12px]">Total do Pedido</h3>
-        <h1 className="font-semibold text-[20px]">R$ 100,00</h1>
-      </div>
+      <FormField
+        control={control}
+        name="total"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Total do Pedido</FormLabel>
+            <FormControl>
+              <div>
+                <span>R$ </span>
+                <Input placeholder="00" type="number" {...field} />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name="totalRecieved"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Total Recebido</FormLabel>
+            <FormControl>
+              <div>
+                <span>R$ </span>
+                <Input type="number" {...field} />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
       <div className="flex flex-col justify-center ml-10">
-        <h3 className="text-[12px]">Restante</h3>
-        <h1 className="font-semibold text-[20px]">R$ 80,00</h1>
+        <h3 className="text-[12px]">Troco</h3>
+        <h1 className="font-semibold text-[20px]">{"em construção"}</h1>
       </div>
       <div className="flex gap-x-4 ml-auto">
-        <Link className={footerButtonsStyle({ type: "back" })} href={"/order/all"}>
+        <Link
+          className={footerButtonsStyle({ type: "back" })}
+          href={"/order/all"}
+        >
           Voltar
         </Link>
-        <Link className={footerButtonsStyle({ type: "delete" })} href={"/order/new"}>
+        <Link
+          className={footerButtonsStyle({ type: "delete" })}
+          href={"/order/new"}
+        >
           Excluir
         </Link>
-        <Button className={footerButtonsStyle({ type: "save" })} onClick={handleAddOrder}>
+        <Button type="submit" onClick={onSubmit} className={footerButtonsStyle({ type: "save" })}>
           Salvar
         </Button>
       </div>

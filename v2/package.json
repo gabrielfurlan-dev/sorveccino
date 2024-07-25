@@ -16,7 +16,7 @@
   "dependencies": {
     "@auth/drizzle-adapter": "^1.4.1",
     "@formkit/tempo": "^0.1.1",
-    "@hookform/resolvers": "^3.6.0",
+    "@hookform/resolvers": "^3.9.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@phosphor-icons/react": "^2.1.5",
     "@radix-ui/react-accordion": "^1.1.2",
@@ -46,7 +46,7 @@
     "postgres": "^3.4.4",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.51.5",
+    "react-hook-form": "^7.52.1",
     "react-resizable-panels": "^2.0.21",
     "shadcn-ui": "^0.8.0",
     "sonner": "^1.5.0",
