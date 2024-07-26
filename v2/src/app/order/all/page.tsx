@@ -49,9 +49,9 @@ export default function Order() {
     0
   );
 
-  const formatCurrency = (value: number) => {
+  function formatCurrency(value: number){
     if (typeof value !== "number") {
-      return "R$ 0,00";
+      return formatCurrency(parseFloat(value));
     }
     return value.toLocaleString("pt-BR", {
       style: "currency",
