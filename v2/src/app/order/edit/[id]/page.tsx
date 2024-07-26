@@ -1,4 +1,5 @@
 "use client";
+
 import { Input } from "@/components/ui/input";
 import {
   ResizableHandle,
@@ -6,7 +7,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Textarea } from "@/components/ui/textarea";
-import { Footer } from "./components/footer";
+import { EditFooter } from "../components/footer"; 
 import { Structure } from "@/components/sorveccino-ui/structure";
 import {
   Form,
@@ -20,64 +21,101 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
-import { Add } from "@/lib/Backend/UseCases/OrderUseCases";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Get, Edit as updateOrder } from "@/lib/Backend/UseCases/OrderUseCases";
 import { queryClient } from "@/lib/utils/reactQuery";
 import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
 
-export const NewOrderFormSchema = z.object({
+export const EditOrderFormSchema = z.object({
   id: z.string().nullable(),
   createdAt: z.date(),
   description: z.string(),
   total: z.coerce.number(),
-  totalRecieved: z.coerce.number(),
+  totalToRecieve: z.coerce.number(),
   customer: z.object({
     name: z.string(),
     notes: z.string(),
   }),
 });
 
-export type NewOrderForm = z.infer<typeof NewOrderFormSchema>;
+export type EditOrderForm = z.infer<typeof EditOrderFormSchema>;
 
-export default function NewOrder() {
+export default function EditOrder() {
   const router = useRouter();
+  const { id } = useParams();
 
-  const form = useForm<NewOrderForm>({
-    resolver: zodResolver(NewOrderFormSchema),
+  const orderId = Array.isArray(id) ? id[0] : id;
+
+  const { data: order, isLoading, isError } = useQuery({
+    queryKey: ["order", orderId],
+    queryFn: () => Get(orderId),
+    enabled: !!orderId,
+  });
+
+  const form = useForm<EditOrderForm>({
+    resolver: zodResolver(EditOrderFormSchema),
     defaultValues: {
+      id: order?.id ?? null,
+      createdAt: order?.createdAt ?? new Date(),
+      description: order?.description ?? "",
+      total: order?.total ?? 0,
+      totalToRecieve: order?.totalToRecieve ?? 0,
       customer: {
-        name: "Cliente Padrão",
+        name: order?.customer.name ?? "Cliente Padrão",
+        notes: order?.customer.notes ?? "",
       },
+    },
+  });
+
+  useEffect(() => {
+    console.log(form)
+    if (order) {
+      form.reset({
+        id: order.id ?? null,
+        createdAt: order.createdAt ?? new Date(),
+        description: order.description ?? "",
+        total: order.total ?? 0,
+        totalToRecieve: order.totalToRecieve ?? 0,
+        customer: {
+          name: order.customer.name ?? "Cliente Padrão",
+          notes: order.customer.notes ?? "",
+        },
+      });
+    }
+  }, [order, form]);
+
+  const { mutateAsync: editOrder } = useMutation({
+    mutationFn: updateOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
   });
 
   async function onSubmit() {
     try {
       const values = form.getValues();
-      await addOrder({
-        id: "1",
+      await editOrder({
+        id: orderId,
         total: values.total,
-        createdAt: new Date(),
-        totalToRecieve: values.totalRecieved,
+        createdAt: values.createdAt,
+        totalToRecieve: values.totalToRecieve,
         customer: {
           name: values.customer.name,
           notes: values.customer.notes,
         },
         description: values.description,
       });
-      toast.success("Pedido adicionado com sucesso.");
+      toast.success("Pedido atualizado com sucesso.");
       router.push("/order/all");
     } catch (error) {
-      toast.error("Ocorreu um erro ao adicionar o pedido.");
+      toast.error("Ocorreu um erro ao atualizar o pedido.");
     }
   }
 
-  const { mutateAsync: addOrder } = useMutation({
-    mutationFn: Add,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
-    },
-  });
+  if (isLoading) return <p>Carregando...</p>;
+  if (isError) return <p>Erro ao carregar o pedido.</p>;
 
   return (
     <Structure>
@@ -141,7 +179,7 @@ export default function NewOrder() {
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
-          <Footer control={form.control} onSubmit={onSubmit} />
+          <EditFooter control={form.control} onSubmit={onSubmit} />
         </form>
       </Form>
     </Structure>
