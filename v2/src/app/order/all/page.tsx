@@ -16,12 +16,18 @@ import { Structure } from "@/components/sorveccino-ui/structure";
 import { toast } from "sonner";
 import Link from "next/link";
 import { PencilLine, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Order() {
+  const [total, setTotal] = useState(0);
   const { data: orders, refetch } = useQuery({
     queryKey: ["orders"],
     queryFn: GetAll,
   });
+
+  useEffect(() => {
+    setTotal(orders?.reduce((acc, order) => acc + order.totalToRecieve, 0) ?? 0);
+  }, [orders]);
 
   const { mutate: deleteOrder } = useMutation({
     mutationFn: DeleteOrder,
@@ -100,7 +106,7 @@ export default function Order() {
           </Table>
         </div>
       </div>
-      <Footer total={formatCurrency(totalAmount ?? 0)} />
+      <Footer total={total} />
     </Structure>
   );
 }
