@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Get, Edit as updateOrder } from "@/lib/Backend/UseCases/OrderUseCases";
+import { Get, Update as updateOrder } from "@/lib/Backend/UseCases/OrderUseCases";
 import { queryClient } from "@/lib/utils/reactQuery";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
