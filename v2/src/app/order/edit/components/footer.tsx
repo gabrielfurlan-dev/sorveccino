@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Control } from "react-hook-form";
 import { tv } from "tailwind-variants";
-import { EditOrderForm } from "../[id]"; 
 import {
   FormField,
   FormItem,
@@ -12,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { EditOrderForm } from "../[id]/page";
 
 type EditFooterProps = {
   control: Control<EditOrderForm>;
@@ -48,7 +48,7 @@ export function EditFooter({ control, onSubmit }: EditFooterProps) {
           </FormItem>
         )}
       />
-      <FormField
+      {/* <FormField
         control={control}
         name="totalRecieved"
         render={({ field }) => (
@@ -63,7 +63,7 @@ export function EditFooter({ control, onSubmit }: EditFooterProps) {
             <FormMessage />
           </FormItem>
         )}
-      />
+      /> */}
       <div className="flex flex-col justify-center ml-10">
         <h3 className="text-[12px]">Troco</h3>
         <h1 className="font-semibold text-[20px]">{"em construção"}</h1>

@@ -5,8 +5,8 @@ export const orders = pgTable("orders", {
   id: text("id").$defaultFn(() => createId()).primaryKey(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(), 
-  description: text("descprition"),
+  description: text("description"),
   total: numeric("total"),
-  totalToRecieve: numeric("total"),
+  totalToRecieve: numeric("totalToRecieve"),
   customer: jsonb("customer"),
 });

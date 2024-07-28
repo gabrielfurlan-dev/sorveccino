@@ -1,5 +1,5 @@
 {
-  "id": "481c1f5c-e205-45e5-9ee8-00cd60db4d44",
+  "id": "e7763456-2a1b-4a23-afc8-2804a42f9578",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -28,14 +28,20 @@
           "notNull": true,
           "default": "now()"
         },
-        "descprition": {
-          "name": "descprition",
+        "description": {
+          "name": "description",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
         "total": {
           "name": "total",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalToRecieve": {
+          "name": "totalToRecieve",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false

@@ -18,26 +18,14 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { Add } from "@/lib/Backend/UseCases/OrderUseCases";
 import { queryClient } from "@/lib/utils/reactQuery";
 import { useRouter } from "next/navigation";
-
-export const NewOrderFormSchema = z.object({
-  id: z.string().nullable(),
-  createdAt: z.date(),
-  description: z.string(),
-  total: z.coerce.number(),
-  totalRecieved: z.coerce.number(),
-  customer: z.object({
-    name: z.string(),
-    notes: z.string(),
-  }),
-});
-
-export type NewOrderForm = z.infer<typeof NewOrderFormSchema>;
+import {
+  NewOrderForm,
+  NewOrderFormSchema,
+} from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
 
 export default function NewOrder() {
   const router = useRouter();
@@ -55,10 +43,8 @@ export default function NewOrder() {
     try {
       const values = form.getValues();
       await addOrder({
-        id: "1",
         total: values.total,
-        createdAt: new Date(),
-        totalToRecieve: values.totalRecieved,
+        totalRecieved: values.totalRecieved,
         customer: {
           name: values.customer.name,
           notes: values.customer.notes,
@@ -70,6 +56,13 @@ export default function NewOrder() {
     } catch (error) {
       toast.error("Ocorreu um erro ao adicionar o pedido.");
     }
+  }
+
+  async function Add(order: NewOrderForm) {
+    await fetch("/api/order/new", {
+      method: "POST",
+      body: JSON.stringify(order),
+    });
   }
 
   const { mutateAsync: addOrder } = useMutation({

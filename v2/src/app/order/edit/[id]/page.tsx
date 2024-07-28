@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Get, Update as updateOrder } from "@/lib/Backend/UseCases/OrderUseCases";
+// import { Get, Update as updateOrder } from "@/lib/Backend/UseCases/OrderUseCases";
 import { queryClient } from "@/lib/utils/reactQuery";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
@@ -50,44 +50,44 @@ export default function EditOrder() {
 
   const { data: order, isLoading, isError } = useQuery({
     queryKey: ["order", orderId],
-    queryFn: () => Get(orderId),
+    // queryFn: () => Get(orderId),
     enabled: !!orderId,
   });
 
   const form = useForm<EditOrderForm>({
     resolver: zodResolver(EditOrderFormSchema),
-    defaultValues: {
-      id: order?.id ?? null,
-      createdAt: order?.createdAt ?? new Date(),
-      description: order?.description ?? "",
-      total: order?.total ?? 0,
-      totalToRecieve: order?.totalToRecieve ?? 0,
-      customer: {
-        name: order?.customer.name ?? "Cliente Padrão",
-        notes: order?.customer.notes ?? "",
-      },
-    },
+    // defaultValues: {
+    //   id: order?.id ?? null,
+    //   createdAt: order?.createdAt ?? new Date(),
+    //   description: order?.description ?? "",
+    //   total: order?.total ?? 0,
+    //   totalToRecieve: order?.totalToRecieve ?? 0,
+    //   customer: {
+    //     name: order?.customer.name ?? "Cliente Padrão",
+    //     notes: order?.customer.notes ?? "",
+    //   },
+    // },
   });
 
   useEffect(() => {
     console.log(form)
     if (order) {
-      form.reset({
-        id: order.id ?? null,
-        createdAt: order.createdAt ?? new Date(),
-        description: order.description ?? "",
-        total: order.total ?? 0,
-        totalToRecieve: order.totalToRecieve ?? 0,
-        customer: {
-          name: order.customer.name ?? "Cliente Padrão",
-          notes: order.customer.notes ?? "",
-        },
-      });
+      // form.reset({
+      //   id: order.id ?? null,
+      //   createdAt: order.createdAt ?? new Date(),
+      //   description: order.description ?? "",
+      //   total: order.total ?? 0,
+      //   totalToRecieve: order.totalToRecieve ?? 0,
+      //   customer: {
+      //     name: order.customer.name ?? "Cliente Padrão",
+      //     notes: order.customer.notes ?? "",
+      //   },
+      // });
     }
   }, [order, form]);
 
   const { mutateAsync: editOrder } = useMutation({
-    mutationFn: updateOrder,
+    // mutationFn: updateOrder,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
@@ -96,17 +96,17 @@ export default function EditOrder() {
   async function onSubmit() {
     try {
       const values = form.getValues();
-      await editOrder({
-        id: orderId,
-        total: values.total,
-        createdAt: values.createdAt,
-        totalToRecieve: values.totalToRecieve,
-        customer: {
-          name: values.customer.name,
-          notes: values.customer.notes,
-        },
-        description: values.description,
-      });
+      // await editOrder({
+      //   id: orderId,
+      //   total: values.total,
+      //   createdAt: values.createdAt,
+      //   totalToRecieve: values.totalToRecieve,
+      //   customer: {
+      //     name: values.customer.name,
+      //     notes: values.customer.notes,
+      //   },
+      //   description: values.description,
+      // });
       toast.success("Pedido atualizado com sucesso.");
       router.push("/order/all");
     } catch (error) {

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const OrderSchema = z.object({
-  id: z.string(),
+  id: z.string().nullable(),
   createdAt: z.date(),
   description: z.string(),
   total: z.number(),
