@@ -5,6 +5,7 @@ import { Order } from "@/lib/Backend/Order/Types/Entities/Order";
 import { eq } from "drizzle-orm";
 import { IOrderRepository } from "@/lib/Backend/Order/Types/Interfaces/IOrderRepository";
 import { NewOrderForm } from "../Types/Commands/NewOrderForm";
+import { UpdateOrderCommand } from "../Types/Commands/UpdateOrderCommand";
 
 export class OrderRepository implements IOrderRepository {
   async add(order: NewOrderForm): Promise<void> {
@@ -72,7 +73,8 @@ export class OrderRepository implements IOrderRepository {
       } satisfies Order;
     });
   }
-  async update(order: Order): Promise<void> {
+
+  async update(order: UpdateOrderCommand): Promise<void> {
     await db
       .update(orders)
       .set({
