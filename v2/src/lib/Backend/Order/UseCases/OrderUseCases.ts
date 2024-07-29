@@ -28,7 +28,7 @@ export async function Update(order: Order): Promise<void> {
   // return repo.update(order);
 }
 export async function Delete(id: string): Promise<void> {
-  // return repo.delete(id);
+  return repo.delete(id);
 }
 export async function GetAll(): Promise<Order[]> {
   return repo.getAll();

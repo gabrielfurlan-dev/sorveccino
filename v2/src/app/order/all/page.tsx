@@ -36,8 +36,8 @@ export default function AllOrders() {
     );
   }, [orders]);
 
-  const { mutate: deleteOrder } = useMutation({
-    // mutationFn: DeleteOrder,
+  const { mutate: handleDelete } = useMutation({
+    mutationFn: deleteOrder,
     onSuccess: () => {
       toast.success("Pedido excluído com sucesso.");
       refetch();
@@ -47,9 +47,9 @@ export default function AllOrders() {
     },
   });
 
-  const handleDelete = (id: string) => {
-    // deleteOrder(id);
-  };
+  async function deleteOrder(id: string) {
+    await fetch(`/api/order/remove?id=${id}`, { method: "DELETE" });
+  }
 
   function formatCurrency(value: number) {
     if (typeof value !== "number") {
