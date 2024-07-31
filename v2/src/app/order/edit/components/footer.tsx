@@ -11,14 +11,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { EditOrderForm } from "../[id]/page";
+import { UpdateOrderCommand } from "@/lib/Backend/Order/Types/Commands/UpdateOrderCommand";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type EditFooterProps = {
-  control: Control<EditOrderForm>;
+  control: Control<UpdateOrderCommand>;
   onSubmit: () => void;
 };
 
 export function EditFooter({ control, onSubmit }: EditFooterProps) {
+  const [moneyChange, setMoneyChange] = useState(0);
+
+  useEffect(() => {
+    const moneyChangeValue =
+      control._formValues.totalToRecieve - control._formValues.total;
+    if (moneyChangeValue < 0) setMoneyChange(0);
+    setMoneyChange(moneyChangeValue);
+  }, [control._formValues.total, control._formValues.totalToRecieve]);
+
   const footerButtonsStyle = tv({
     base: "dark:text-white flex items-center justify-center text-black bg-transparent text-[13px] h-[45px] rounded-lg w-[160px] border-2",
     variants: {
@@ -41,32 +52,37 @@ export function EditFooter({ control, onSubmit }: EditFooterProps) {
             <FormControl>
               <div>
                 <span>R$ </span>
-                <Input placeholder="00" type="number" {...field} />
+                <Input id="total" placeholder="00" type="number" {...field} />
               </div>
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-      {/* <FormField
+      <FormField
         control={control}
-        name="totalRecieved"
+        name="totalToRecieve"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Total Recebido</FormLabel>
             <FormControl>
               <div>
                 <span>R$ </span>
-                <Input type="number" {...field} />
+                <Input
+                  id="totalToRecieve"
+                  placeholder="00"
+                  type="number"
+                  {...field}
+                />
               </div>
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
-      /> */}
+      />
       <div className="flex flex-col justify-center ml-10">
         <h3 className="text-[12px]">Troco</h3>
-        <h1 className="font-semibold text-[20px]">{"em construção"}</h1>
+        <h1 className="font-semibold text-[20px]">{moneyChange}</h1>
       </div>
       <div className="flex gap-x-4 ml-auto">
         <Link
