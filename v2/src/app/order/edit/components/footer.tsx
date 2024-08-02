@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Control } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { tv } from "tailwind-variants";
 import {
   FormField,
@@ -13,22 +13,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { UpdateOrderCommand } from "@/lib/Backend/Order/Types/Commands/UpdateOrderCommand";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 type EditFooterProps = {
   control: Control<UpdateOrderCommand>;
   onSubmit: () => void;
+  useFormWatch: (name: string) => any;
 };
 
-export function EditFooter({ control, onSubmit }: EditFooterProps) {
-  const [moneyChange, setMoneyChange] = useState(0);
+export function EditFooter({ control, onSubmit, useFormWatch  }: EditFooterProps) {
+  const [change, setChange] = useState(0);
 
   useEffect(() => {
-    const moneyChangeValue =
-      control._formValues.totalToRecieve - control._formValues.total;
-    if (moneyChangeValue < 0) setMoneyChange(0);
-    setMoneyChange(moneyChangeValue);
-  }, [control._formValues.total, control._formValues.totalToRecieve]);
+    const total = useFormWatch("total");
+    const totalToRecieve = useFormWatch("totalToRecieve");
+    console.log(total, totalToRecieve);
+    setChange(total - totalToRecieve);
+  }, [useFormWatch("total"), useFormWatch("totalToRecieve")]);
 
   const footerButtonsStyle = tv({
     base: "dark:text-white flex items-center justify-center text-black bg-transparent text-[13px] h-[45px] rounded-lg w-[160px] border-2",
@@ -82,7 +82,7 @@ export function EditFooter({ control, onSubmit }: EditFooterProps) {
       />
       <div className="flex flex-col justify-center ml-10">
         <h3 className="text-[12px]">Troco</h3>
-        <h1 className="font-semibold text-[20px]">{moneyChange}</h1>
+        <h1 className="font-semibold text-[20px]">{change}</h1>
       </div>
       <div className="flex gap-x-4 ml-auto">
         <Link

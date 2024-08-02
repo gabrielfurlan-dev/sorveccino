@@ -65,7 +65,6 @@ export default function EditOrder() {
   });
 
   useEffect(() => {
-    console.log(form);
     if (order) {
       form.reset({
         id: order.id ?? null,
@@ -179,7 +178,7 @@ export default function EditOrder() {
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
-          <EditFooter control={form.control} onSubmit={onSubmit} />
+          <EditFooter control={form.control} onSubmit={onSubmit} useFormWatch={form.watch} />
         </form>
       </Form>
     </Structure>
