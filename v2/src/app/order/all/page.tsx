@@ -116,7 +116,7 @@ export default function AllOrders() {
           </Table>
         </div>
       </div>
-      <Footer total={total} />
+      <Footer total={formatCurrency(total)} />
     </Structure>
   );
 }

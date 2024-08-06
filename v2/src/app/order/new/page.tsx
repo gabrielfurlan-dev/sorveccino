@@ -1,34 +1,22 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Textarea } from "@/components/ui/textarea";
 import { Footer } from "./components/footer";
 import { Structure } from "@/components/sorveccino-ui/structure";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/utils/reactQuery";
 import { useRouter } from "next/navigation";
-import {
-  NewOrderForm,
-  NewOrderFormSchema,
-} from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
+import { useState } from "react";
+import { NewOrderForm, NewOrderFormSchema } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
 
 export default function NewOrder() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<NewOrderForm>({
     resolver: zodResolver(NewOrderFormSchema),
@@ -39,7 +27,28 @@ export default function NewOrder() {
     },
   });
 
+  const { mutateAsync: addOrder } = useMutation({
+    mutationFn: async (order: NewOrderForm) => {
+      const response = await fetch("/api/order/new", {
+        method: "POST",
+        body: JSON.stringify(order),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao adicionar o pedido.");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+
   async function onSubmit() {
+    if (isLoading) return; // Prevent multiple submissions
+
+    setIsLoading(true);
     try {
       const values = form.getValues();
       await addOrder({
@@ -55,22 +64,10 @@ export default function NewOrder() {
       router.push("/order/all");
     } catch (error) {
       toast.error("Ocorreu um erro ao adicionar o pedido.");
+    } finally {
+      setIsLoading(false);
     }
   }
-
-  async function Add(order: NewOrderForm) {
-    await fetch("/api/order/new", {
-      method: "POST",
-      body: JSON.stringify(order),
-    });
-  }
-
-  const { mutateAsync: addOrder } = useMutation({
-    mutationFn: Add,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
-    },
-  });
 
   return (
     <Structure>
@@ -78,28 +75,30 @@ export default function NewOrder() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="px-20 h-[80vh]">
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel>
+              <ResizablePanel className="">
                 <FormField
                   control={form.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Descrição do Pedido</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          className="min-h-[65vh]"
-                          placeholder="Adicione os produtos do seu pedido"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
+                      <FormLabel className="text-xl">Descrição do Pedido</FormLabel>
+                      <div className="px-2">
+                        <FormControl>
+                          <Textarea
+                            className="min-h-[65vh] resize-none"
+                            placeholder="Adicione os produtos do seu pedido"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
                     </FormItem>
                   )}
                 />
               </ResizablePanel>
               <ResizableHandle className="invisible" />
               <ResizablePanel>
-                <h1 className="text-xl">Dados Pessoais</h1>
+                <FormLabel className="text-xl">Dados Pessoais</FormLabel>
                 <div className="py-6 px-2">
                   <FormField
                     control={form.control}

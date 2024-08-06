@@ -20,7 +20,7 @@ type EditFooterProps = {
   useFormWatch: (name: string) => any;
 };
 
-export function EditFooter({ control, onSubmit, useFormWatch  }: EditFooterProps) {
+export function EditFooter({ control, onSubmit, useFormWatch }: EditFooterProps) {
   const [change, setChange] = useState(0);
 
   useEffect(() => {
@@ -43,46 +43,60 @@ export function EditFooter({ control, onSubmit, useFormWatch  }: EditFooterProps
 
   return (
     <div className="flex w-full px-20 items-center py-2 mt-auto fixed bottom-10">
-      <FormField
-        control={control}
-        name="total"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Total do Pedido</FormLabel>
-            <FormControl>
-              <div>
-                <span>R$ </span>
-                <Input id="total" placeholder="00" type="number" {...field} />
-              </div>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name="totalToRecieve"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Total Recebido</FormLabel>
-            <FormControl>
-              <div>
-                <span>R$ </span>
-                <Input
-                  id="totalToRecieve"
-                  placeholder="00"
-                  type="number"
-                  {...field}
-                />
-              </div>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <div className="flex flex-col justify-center ml-10">
-        <h3 className="text-[12px]">Troco</h3>
-        <h1 className="font-semibold text-[20px]">{change}</h1>
+      <div className="flex gap-3">
+        <FormField
+          control={control}
+          name="total"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Total do Pedido</FormLabel>
+              <FormControl>
+                <div className="flex items-center text-xl">
+                  <FormLabel className="text-xl pr-2">R$</FormLabel>
+                  <Input id="total" placeholder="00,00" type="number" {...field} />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="totalToRecieve"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Total Recebido</FormLabel>
+              <FormControl>
+                <div className="flex items-center text-xl">
+                  <FormLabel className="text-xl pr-2">R$</FormLabel>
+                  <Input
+                    id="totalToRecieve"
+                    placeholder="00,00"
+                    type="number"
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="total"
+          render={() => (
+            <FormItem>
+              <FormLabel>Troco</FormLabel>
+              <FormControl>
+                <div className="flex items-center text-xl h-[40px]">
+                  <FormLabel className="text-xl">
+                    {change >= 0 ? `${change.toFixed(2)}` : "Valor insuficiente"}
+                  </FormLabel>
+                </div>
+              </FormControl>
+            </FormItem>
+          )}
+        />
       </div>
       <div className="flex gap-x-4 ml-auto">
         <Link

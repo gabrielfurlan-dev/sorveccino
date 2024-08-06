@@ -131,7 +131,7 @@ export default function EditOrder() {
                       <FormLabel>Descrição do Pedido</FormLabel>
                       <FormControl>
                         <Textarea
-                          className="min-h-[65vh]"
+                          className="min-h-[65vh] resize-none"
                           placeholder="Adicione os produtos do seu pedido"
                           {...field}
                         />

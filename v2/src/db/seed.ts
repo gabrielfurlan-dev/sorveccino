@@ -1,29 +1,42 @@
 import { db } from "@/db/connection";
 import { faker } from '@faker-js/faker';
-import { customers } from "@/db/schemas/customers";
-import { embalagens } from "./test/embalagens";
-import { itens } from "./test/itens";
+import { orders } from "./schemas";
+// import { customers } from "@/db/schemas/customers";
+// import { embalagens } from "./test/embalagens";
+// import { itens } from "./test/itens";
 
-await db.delete(customers).execute();
-console.log("deleting customers...");
-
-const [customer] = await db.insert(customers).values({
-    name: faker.person.fullName(),
-    cpf: "719.207.030-04",
-    email: faker.internet.email(),
-    phone: faker.phone.number(),
-    zipCode: faker.location.zipCode(),
-    address: faker.location.street(),
-    city: faker.location.city(),
-    state: faker.location.state(),
-    number: faker.location.buildingNumber(),
-    complement: faker.location.secondaryAddress(),
-    neighborhood: faker.location.county()
+const [order] = await db.insert(orders).values({
+    description: "Açai de nutella com morango",
+    total: "21.75",
+    totalToRecieve: "16.75",
+    customer: {
+        name: "Cristiano Rosinaldo",
+        notes: "Siiiuuu"
+    }
 }).returning({
-    id: customers.id
+    id: orders.id
 })
 
-console.log(`customer added: id = ${customer.id}`);
+// await db.delete(customers).execute();
+// console.log("deleting customers...");
+
+// const [customer] = await db.insert(customers).values({
+//     name: faker.person.fullName(),
+//     cpf: "719.207.030-04",
+//     email: faker.internet.email(),
+//     phone: faker.phone.number(),
+//     zipCode: faker.location.zipCode(),
+//     address: faker.location.street(),
+//     city: faker.location.city(),
+//     state: faker.location.state(),
+//     number: faker.location.buildingNumber(),
+//     complement: faker.location.secondaryAddress(),
+//     neighborhood: faker.location.county()
+// }).returning({
+//     id: customers.id
+// })
+
+// console.log(`customer added: id = ${customer.id}`);
 
 // const [item] = await db.insert(itens).values({
 //     nome: 'Morango',

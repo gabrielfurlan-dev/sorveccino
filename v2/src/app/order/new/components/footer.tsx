@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Control } from "react-hook-form";
+import { Control, useWatch } from "react-hook-form";
 import { tv } from "tailwind-variants";
 import { NewOrderForm } from "@/app/order/new/page";
 import {
@@ -30,55 +30,68 @@ export function Footer({ control, onSubmit }: FooterProps) {
     },
   });
 
+  // Use watch to observe changes in form values
+  const total = useWatch({ control, name: "total" });
+  const totalRecieved = useWatch({ control, name: "totalRecieved" });
+  const troco = (totalRecieved || 0) - (total || 0);
+
   return (
     <div className="flex w-full px-20 items-center py-2 mt-auto fixed bottom-10">
-      <FormField
-        control={control}
-        name="total"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Total do Pedido</FormLabel>
-            <FormControl>
-              <div>
-                <span>R$ </span>
-                <Input placeholder="00" type="number" {...field} />
-              </div>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name="totalRecieved"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Total Recebido</FormLabel>
-            <FormControl>
-              <div>
-                <span>R$ </span>
-                <Input type="number" {...field} />
-              </div>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <div className="flex flex-col justify-center ml-10">
-        <h3 className="text-[12px]">Troco</h3>
-        <h1 className="font-semibold text-[20px]">{"em construção"}</h1>
+      <div className="flex gap-3">
+        <FormField
+          control={control}
+          name="total"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Total do Pedido</FormLabel>
+              <FormControl>
+                <div className="flex items-center text-xl">
+                  <FormLabel className="text-xl pr-2">R$</FormLabel>
+                  <Input placeholder="00" type="number" {...field} />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="totalRecieved"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Total Recebido</FormLabel>
+              <FormControl>
+                <div className="flex items-center text-xl">
+                  <FormLabel className="text-xl pr-2">R$</FormLabel>
+                  <Input type="number" {...field} />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="troco"
+          render={() => (
+            <FormItem>
+              <FormLabel>Troco</FormLabel>
+              <FormControl>
+                <div className="flex items-center text-xl h-[40px]">
+                  <FormLabel className="text-xl">                    
+                    {troco >= 0 ? `R$ ${troco.toFixed(2)}` : "Valor insuficiente"}
+                  </FormLabel>
+                </div>
+              </FormControl>
+            </FormItem>
+          )}
+        />
       </div>
       <div className="flex gap-x-4 ml-auto">
-        <Link
-          className={footerButtonsStyle({ type: "back" })}
-          href={"/order/all"}
-        >
+        <Link className={footerButtonsStyle({ type: "back" })} href={"/order/all"}>
           Voltar
         </Link>
-        <Link
-          className={footerButtonsStyle({ type: "delete" })}
-          href={"/order/new"}
-        >
+        <Link className={footerButtonsStyle({ type: "delete" })} href={"/order/new"}>
           Excluir
         </Link>
         <Button

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 interface FooterProps {
-  total: number;
+  total: string;
 }
 
 export function Footer({ total }: FooterProps) {
