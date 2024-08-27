@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.4.1",
-    "@formkit/tempo": "^0.1.1",
+    "@formkit/tempo": "^0.1.2",
     "@hookform/resolvers": "^3.9.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@phosphor-icons/react": "^2.1.5",

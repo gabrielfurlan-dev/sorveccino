@@ -178,7 +178,7 @@ export default function EditOrder() {
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
-          <EditFooter control={form.control} onSubmit={onSubmit} useFormWatch={form.watch} />
+          <EditFooter control={form.control} onSubmit={onSubmit} formWatch={form.watch} />
         </form>
       </Form>
     </Structure>

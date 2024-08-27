@@ -17,10 +17,10 @@ import { useEffect, useState } from "react";
 type EditFooterProps = {
   control: Control<UpdateOrderCommand>;
   onSubmit: () => void;
-  useFormWatch: (name: string) => any;
+  formWatch: (name: string) => any;
 };
 
-export function EditFooter({ control, onSubmit, useFormWatch }: EditFooterProps) {
+export function EditFooter({ control, onSubmit, formWatch: useFormWatch }: EditFooterProps) {
   const [change, setChange] = useState(0);
 
   useEffect(() => {

@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Control, useWatch } from "react-hook-form";
 import { tv } from "tailwind-variants";
-import { NewOrderForm } from "@/app/order/new/page";
 import {
   FormField,
   FormItem,
@@ -12,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { NewOrderForm } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
 
 type FooterProps = {
   control: Control<NewOrderForm>;

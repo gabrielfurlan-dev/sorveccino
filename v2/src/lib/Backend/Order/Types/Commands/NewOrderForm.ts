@@ -1,13 +1,14 @@
 import { z } from "zod";
 
 export const NewOrderFormSchema = z.object({
-    description: z.string(),
-    total: z.coerce.number(),
-    totalRecieved: z.coerce.number(),
+    description: z.string().min(1),
+    total: z.coerce.number().default(0),
+    totalRecieved: z.coerce.number().default(0),
     customer: z.object({
-      name: z.string(),
-      notes: z.string(),
+      name: z.string().min(1),
+      notes: z.string().min(1),
     }),
+    troco: z.number().nullable().default(0),
   });
   
   export type NewOrderForm = z.infer<typeof NewOrderFormSchema>;

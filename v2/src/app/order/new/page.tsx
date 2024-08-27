@@ -47,10 +47,14 @@ export default function NewOrder() {
 
   async function onSubmit() {
     if (isLoading) return; // Prevent multiple submissions
-
     setIsLoading(true);
     try {
       const values = form.getValues();
+
+      if (!NewOrderFormSchema.parse(values)) {
+        return;
+      }
+
       await addOrder({
         total: values.total,
         totalRecieved: values.totalRecieved,
@@ -59,6 +63,7 @@ export default function NewOrder() {
           notes: values.customer.notes,
         },
         description: values.description,
+        troco: values.troco
       });
       toast.success("Pedido adicionado com sucesso.");
       router.push("/order/all");
@@ -107,7 +112,7 @@ export default function NewOrder() {
                       <FormItem>
                         <FormLabel>Nome do Cliente</FormLabel>
                         <FormControl>
-                          <Input placeholder="Cliente Padrão" {...field} />
+                          <Input placeholder="Cliente Padrão" {...field} value={field.value ?? ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -122,7 +127,7 @@ export default function NewOrder() {
                         <FormControl>
                           <Textarea
                             placeholder="Adicione o endereço do cliente e a forma de pagamento"
-                            {...field}
+                            {...field} value={field.value ?? ""} 
                           />
                         </FormControl>
                         <FormMessage />

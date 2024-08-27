@@ -1,6 +1,6 @@
 import { UpdateOrderCommand } from './../Types/Commands/UpdateOrderCommand';
 import { Order } from "@/lib/Backend/Order/Types/Entities/Order";
-import { OrderRepository } from "@/lib/Backend/Order/Repository/OrderRepository";
+import { getAllProps, OrderRepository } from "@/lib/Backend/Order/Repository/OrderRepository";
 import { IOrderRepository } from "@/lib/Backend/Order/Types/Interfaces/IOrderRepository";
 import { NewOrderForm } from "../Types/Commands/NewOrderForm";
 
@@ -20,6 +20,6 @@ export async function Update(order: UpdateOrderCommand): Promise<void> {
 export async function Delete(id: string): Promise<void> {
   return repo.delete(id);
 }
-export async function GetAll(): Promise<Order[]> {
-  return repo.getAll();
+export async function GetAll({startDate, endDate}:getAllProps): Promise<Order[]> {
+  return repo.getAll({startDate, endDate});
 }

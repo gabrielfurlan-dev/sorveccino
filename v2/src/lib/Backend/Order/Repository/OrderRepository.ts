@@ -2,10 +2,15 @@ import { db } from "@/db/connection";
 import { orders } from "@/db/schemas/order";
 import { Order } from "@/lib/Backend/Order/Types/Entities/Order";
 
-import { eq } from "drizzle-orm";
+import { between, eq } from "drizzle-orm";
 import { IOrderRepository } from "@/lib/Backend/Order/Types/Interfaces/IOrderRepository";
 import { NewOrderForm } from "../Types/Commands/NewOrderForm";
 import { UpdateOrderCommand } from "../Types/Commands/UpdateOrderCommand";
+
+export type getAllProps = {
+  startDate: Date;
+  endDate: Date;
+};
 
 export class OrderRepository implements IOrderRepository {
   async add(order: NewOrderForm): Promise<void> {
@@ -13,7 +18,7 @@ export class OrderRepository implements IOrderRepository {
       description: order.description,
       customer: order.customer,
       total: order.total.toString(),
-      totalToRecieve: (order.total - order.totalRecieved).toString(),
+      totalToRecieve: (order.total - (order.totalRecieved ?? 0)).toString(),
     });
   }
   async get(id: string): Promise<Order> {
@@ -43,7 +48,11 @@ export class OrderRepository implements IOrderRepository {
       totalToRecieve: Number(order.totalToRecieve),
     } satisfies Order;
   }
-  async getAll(): Promise<Order[]> {
+
+  async getAll({ startDate, endDate }: getAllProps): Promise<Order[]> {
+    console.log("START DATE: ", startDate);
+    console.log("END DATE: ", endDate);
+
     const data = await db
       .select({
         id: orders.id,
@@ -53,9 +62,12 @@ export class OrderRepository implements IOrderRepository {
         totalToRecieve: orders.totalToRecieve,
         customer: orders.customer,
       })
-      .from(orders);
-
-    return data.map((order) => {
+      .from(orders)
+      .where(between(orders.createdAt, startDate, endDate));
+    
+      console.log("DATA: ", data);
+    
+      return data.map((order) => {
       return {
         id: order.id,
         createdAt: order.createdAt,
