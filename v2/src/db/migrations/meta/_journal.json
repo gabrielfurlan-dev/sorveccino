@@ -8,6 +8,13 @@
       "when": 1722181581437,
       "tag": "0000_productive_reptil",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1724883488245,
+      "tag": "0001_funny_black_tarantula",
+      "breakpoints": true
     }
   ]
 }

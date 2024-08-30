@@ -9,4 +9,5 @@ export const orders = pgTable("orders", {
   total: numeric("total"),
   totalToRecieve: numeric("totalToRecieve"),
   customer: jsonb("customer"),
+  items: jsonb("items"),
 });
