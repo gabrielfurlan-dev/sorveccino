@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Control, useWatch } from "react-hook-form";
 import { tv } from "tailwind-variants";
 import {
   FormField,
@@ -9,16 +8,22 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Control } from "react-hook-form";
 import { NewOrderForm } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
 
 type FooterProps = {
+  total: number;
   control: Control<NewOrderForm>;
   onSubmit: () => void;
 };
 
-export function Footer({ control, onSubmit }: FooterProps) {
+export function Footer({ control, total, onSubmit }: FooterProps) {
+  const troco = total - total;
+
   const footerButtonsStyle = tv({
     base: "dark:text-white flex items-center justify-center text-black bg-transparent text-[13px] h-[45px] rounded-lg w-[160px] border-2",
     variants: {
@@ -30,30 +35,16 @@ export function Footer({ control, onSubmit }: FooterProps) {
     },
   });
 
-  // Use watch to observe changes in form values
-  const total = useWatch({ control, name: "total" });
-  const totalRecieved = useWatch({ control, name: "totalRecieved" });
-  const troco = (totalRecieved || 0) - (total || 0);
-
   return (
     <div className="flex w-full px-20 items-center py-2 mt-auto fixed bottom-10">
       <div className="flex gap-3">
-        <FormField
-          control={control}
-          name="total"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Total do Pedido</FormLabel>
-              <FormControl>
-                <div className="flex items-center text-xl">
-                  <FormLabel className="text-xl pr-2">R$</FormLabel>
-                  <Input placeholder="00" type="number" {...field} />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex flex-col">
+          <Label>Total do Pedido</Label>
+          <div className="flex items-center flex-row text-xl">
+            <p className="text-xl pr-2">R$</p>
+            <p>{total}</p>
+          </div>
+        </div>
         <FormField
           control={control}
           name="totalRecieved"
@@ -62,7 +53,7 @@ export function Footer({ control, onSubmit }: FooterProps) {
               <FormLabel>Total Recebido</FormLabel>
               <FormControl>
                 <div className="flex items-center text-xl">
-                  <FormLabel className="text-xl pr-2">R$</FormLabel>
+                  <Label className="text-xl pr-2">R$</Label>
                   <Input type="number" {...field} />
                 </div>
               </FormControl>
@@ -70,28 +61,24 @@ export function Footer({ control, onSubmit }: FooterProps) {
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name="troco"
-          render={() => (
-            <FormItem>
-              <FormLabel>Troco</FormLabel>
-              <FormControl>
-                <div className="flex items-center text-xl h-[40px]">
-                  <FormLabel className="text-xl">                    
-                    {troco >= 0 ? `R$ ${troco.toFixed(2)}` : "Valor insuficiente"}
-                  </FormLabel>
-                </div>
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        <div className="flex flex-col items-center text-xl h-[40px]">
+          <Label className="text-xl pr-2">Troco</Label>
+          <p className="text-xl">
+            {troco >= 0 ? `R$ ${troco.toFixed(2)}` : "Valor insuficiente"}
+          </p>
+        </div>
       </div>
       <div className="flex gap-x-4 ml-auto">
-        <Link className={footerButtonsStyle({ type: "back" })} href={"/order/all"}>
+        <Link
+          className={footerButtonsStyle({ type: "back" })}
+          href={"/order/all"}
+        >
           Voltar
         </Link>
-        <Link className={footerButtonsStyle({ type: "delete" })} href={"/order/new"}>
+        <Link
+          className={footerButtonsStyle({ type: "delete" })}
+          href={"/order/new"}
+        >
           Excluir
         </Link>
         <Button

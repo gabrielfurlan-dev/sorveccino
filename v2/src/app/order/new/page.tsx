@@ -22,14 +22,13 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/utils/reactQuery";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   NewOrderForm,
   NewOrderFormSchema,
 } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
 import { Button } from "@/components/ui/button";
-import { Tapestry } from "next/font/google";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 
 export default function NewOrder() {
@@ -40,6 +39,11 @@ export default function NewOrder() {
     name?: string;
     value?: number;
   }>({});
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    setTotal(items.reduce((acc, item) => acc + item.value, 0));
+  }, [items]);
 
   const form = useForm<NewOrderForm>({
     resolver: zodResolver(NewOrderFormSchema),
@@ -244,7 +248,11 @@ export default function NewOrder() {
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
-          <Footer control={form.control} onSubmit={onSubmit} />
+          <Footer
+            control={form.control}
+            total={total}
+            onSubmit={onSubmit}
+          />
         </form>
       </Form>
     </Structure>
