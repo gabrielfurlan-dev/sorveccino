@@ -12,16 +12,12 @@ type FooterProps = {
   total: number;
   control: Control<NewOrderForm>;
   onSubmit: () => void;
-  // totalRecieved: number;
-  // setTotalRecieved: (value: number) => void;
   change: number;
 };
 
 export function Footer({
   total,
   onSubmit,
-  // totalRecieved,
-  // setTotalRecieved,
   change,
   control,
 }: FooterProps) {

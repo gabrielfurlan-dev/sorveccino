@@ -40,7 +40,6 @@ export default function NewOrder() {
     value?: number;
   }>({});
   const [total, setTotal] = useState(0);
-  // const [totalRecieved, setTotalRecieved] = useState(0);
   const [totalChange, setTotalChange] = useState(0);
 
   useEffect(() => {
