@@ -19,6 +19,7 @@ export class OrderRepository implements IOrderRepository {
       customer: order.customer,
       total: order.total.toString(),
       totalToRecieve: (order.total - (order.totalRecieved ?? 0)).toString(),
+      items: JSON.stringify(order.items),
     });
   }
   async get(id: string): Promise<Order> {

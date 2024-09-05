@@ -44,6 +44,7 @@ export default function NewOrder() {
 
   useEffect(() => {
     setTotal(items.reduce((acc, item) => acc + item.value, 0));
+    form.setValue("items", items);
   }, [items]);
 
   const form = useForm<NewOrderForm>({
@@ -64,18 +65,18 @@ export default function NewOrder() {
   }, [form.watch("totalRecieved")]);
 
   const { mutateAsync: addOrder } = useMutation({
+    
     mutationFn: async (order: NewOrderForm) => {
       const response = await fetch("/api/order/new", {
         method: "POST",
         body: JSON.stringify(order),
       });
 
-      if (!response.ok) {
-        throw new Error("Erro ao adicionar o pedido.");
-      }
+      if (!response.ok)  throw new Error("Erro ao adicionar o pedido.");
 
       return response.json();
     },
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
@@ -102,14 +103,15 @@ export default function NewOrder() {
   }
 
   async function onSubmit() {
+    
     if (isLoading) return; // Prevent multiple submissions
+
     setIsLoading(true);
+
     try {
       const values = form.getValues();
 
-      if (!NewOrderFormSchema.parse(values)) {
-        return;
-      }
+      if (!NewOrderFormSchema.parse(values)) return;
 
       await addOrder({
         total: values.total,
@@ -122,10 +124,12 @@ export default function NewOrder() {
         troco: values.troco,
         items: values.items,
       });
+
       toast.success("Pedido adicionado com sucesso.");
       router.push("/order/all");
+
     } catch (error) {
-      toast.error("Ocorreu um erro ao adicionar o pedido.");
+      toast.error(`Ocorreu um erro ao adicionar o pedido. ${error}`);
     } finally {
       setIsLoading(false);
     }
