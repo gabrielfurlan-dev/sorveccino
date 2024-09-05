@@ -260,8 +260,6 @@ export default function NewOrder() {
           <Footer
             control={form.control}
             total={total}
-            // totalRecieved={totalRecieved}
-            // setTotalRecieved={setTotalRecieved}
             change={totalChange}
             onSubmit={onSubmit}
           />
