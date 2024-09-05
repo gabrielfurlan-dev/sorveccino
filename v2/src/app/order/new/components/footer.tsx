@@ -52,11 +52,6 @@ export function Footer({
               return <Input {...field} type="number" />;
             }}
           />
-          {/* <Input
-            type="number"
-            value={ totalRecieved }
-            onChange={(e) => setTotalRecieved(parseFloat(e.target.value))}
-          /> */}
         </div>
         <div className="flex flex-col items-center text-xl h-[40px]">
           <Label className="text-xl pr-2">Troco</Label>
