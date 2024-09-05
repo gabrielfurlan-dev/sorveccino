@@ -40,6 +40,8 @@ export default function NewOrder() {
     value?: number;
   }>({});
   const [total, setTotal] = useState(0);
+  // const [totalRecieved, setTotalRecieved] = useState(0);
+  const [totalChange, setTotalChange] = useState(0);
 
   useEffect(() => {
     setTotal(items.reduce((acc, item) => acc + item.value, 0));
@@ -53,6 +55,14 @@ export default function NewOrder() {
       },
     },
   });
+
+  useEffect(() => {
+    const totalRecieved = form.getValues("totalRecieved");
+    
+    if (!totalRecieved || !total) setTotalChange(0);
+    else setTotalChange(totalRecieved - total);
+
+  }, [form.watch("totalRecieved")]);
 
   const { mutateAsync: addOrder } = useMutation({
     mutationFn: async (order: NewOrderForm) => {
@@ -251,6 +261,9 @@ export default function NewOrder() {
           <Footer
             control={form.control}
             total={total}
+            // totalRecieved={totalRecieved}
+            // setTotalRecieved={setTotalRecieved}
+            change={totalChange}
             onSubmit={onSubmit}
           />
         </form>

@@ -2,28 +2,29 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { tv } from "tailwind-variants";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Control } from "react-hook-form";
 import { NewOrderForm } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
+import { FormField, FormItem } from "@/components/ui/form";
 
 type FooterProps = {
   total: number;
   control: Control<NewOrderForm>;
   onSubmit: () => void;
+  // totalRecieved: number;
+  // setTotalRecieved: (value: number) => void;
+  change: number;
 };
 
-export function Footer({ control, total, onSubmit }: FooterProps) {
-  const troco = total - total;
-
+export function Footer({
+  total,
+  onSubmit,
+  // totalRecieved,
+  // setTotalRecieved,
+  change,
+  control,
+}: FooterProps) {
   const footerButtonsStyle = tv({
     base: "dark:text-white flex items-center justify-center text-black bg-transparent text-[13px] h-[45px] rounded-lg w-[160px] border-2",
     variants: {
@@ -45,27 +46,25 @@ export function Footer({ control, total, onSubmit }: FooterProps) {
             <p>{total}</p>
           </div>
         </div>
-        <FormField
-          control={control}
-          name="totalRecieved"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Total Recebido</FormLabel>
-              <FormControl>
-                <div className="flex items-center text-xl">
-                  <Label className="text-xl pr-2">R$</Label>
-                  <Input type="number" {...field} />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex items-center text-xl">
+          <Label className="text-xl pr-2">R$</Label>
+
+          <FormField
+            control={control}
+            name="totalRecieved"
+            render={({ field }) => {
+              return <Input {...field} type="number" />;
+            }}
+          />
+          {/* <Input
+            type="number"
+            value={ totalRecieved }
+            onChange={(e) => setTotalRecieved(parseFloat(e.target.value))}
+          /> */}
+        </div>
         <div className="flex flex-col items-center text-xl h-[40px]">
           <Label className="text-xl pr-2">Troco</Label>
-          <p className="text-xl">
-            {troco >= 0 ? `R$ ${troco.toFixed(2)}` : "Valor insuficiente"}
-          </p>
+          <p className="text-xl">{`R$ ${change.toFixed(2)}`}</p>
         </div>
       </div>
       <div className="flex gap-x-4 ml-auto">
