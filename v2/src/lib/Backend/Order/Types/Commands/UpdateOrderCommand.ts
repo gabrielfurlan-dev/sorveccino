@@ -9,6 +9,12 @@ export const UpdateOrderCommandSchema = z.object({
   }),
   total: z.coerce.number(),
   totalToRecieve: z.coerce.number(),
+  items: z.array(
+    z.object({
+      name: z.string(),
+      value: z.coerce.number(),
+    })
+  )
 });
 
 export type UpdateOrderCommand = z.infer<typeof UpdateOrderCommandSchema>;

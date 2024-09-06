@@ -10,6 +10,7 @@ export const OrderSchema = z.object({
     name: z.string(),
     notes: z.string(),
   }),
+  items: z.array(z.object({ name: z.string(), value: z.number() })),
 });
 
 export type Order = z.infer<typeof OrderSchema>;

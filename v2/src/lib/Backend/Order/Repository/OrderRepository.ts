@@ -31,6 +31,7 @@ export class OrderRepository implements IOrderRepository {
         createdAt: orders.createdAt,
         totalToRecieve: orders.totalToRecieve,
         customer: orders.customer,
+        items: orders.items
       })
       .from(orders)
       .where(eq(orders.id, id));
@@ -45,6 +46,7 @@ export class OrderRepository implements IOrderRepository {
         name: customer.name,
         notes: customer.notes,
       },
+      items: JSON.parse(order.items as string),
       total: Number(order.total),
       totalToRecieve: Number(order.totalToRecieve),
     } satisfies Order;
@@ -62,6 +64,7 @@ export class OrderRepository implements IOrderRepository {
         createdAt: orders.createdAt,
         totalToRecieve: orders.totalToRecieve,
         customer: orders.customer,
+        items: orders.items
       })
       .from(orders)
       .where(between(orders.createdAt, startDate, endDate));
@@ -83,6 +86,7 @@ export class OrderRepository implements IOrderRepository {
         },
         total: Number(order.total),
         totalToRecieve: Number(order.totalToRecieve),
+        items: JSON.parse(order.items as string),
       } satisfies Order;
     });
   }

@@ -23,13 +23,19 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/lib/utils/reactQuery";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   UpdateOrderCommand,
   UpdateOrderCommandSchema,
 } from "@/lib/Backend/Order/Types/Commands/UpdateOrderCommand";
+import { NewOrderForm } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
 
 export default function EditOrder() {
+  const [items, setItems] = useState<NewOrderForm["items"]>([]);
+  const [actualItem, setActualItem] = useState<{
+    name?: string;
+    value?: number;
+  }>({});
   const router = useRouter();
   const { id } = useParams();
 
@@ -77,6 +83,7 @@ export default function EditOrder() {
         },
       });
     }
+    setItems(order?.items ?? []);
   }, [order, form]);
 
   const { mutateAsync: editOrder } = useMutation({
@@ -105,6 +112,7 @@ export default function EditOrder() {
           notes: values.customer.notes,
         },
         description: values.description,
+        items: items,
       });
       toast.success("Pedido atualizado com sucesso.");
       router.push("/order/all");
@@ -178,7 +186,11 @@ export default function EditOrder() {
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
-          <EditFooter control={form.control} onSubmit={onSubmit} formWatch={form.watch} />
+          <EditFooter
+            control={form.control}
+            onSubmit={onSubmit}
+            formWatch={form.watch}
+          />
         </form>
       </Form>
     </Structure>

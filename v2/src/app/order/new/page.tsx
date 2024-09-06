@@ -164,33 +164,7 @@ export default function NewOrder() {
                   )}
                 />
                 <div className="py-6 px-2">
-                  <ScrollArea className="h-72 rounded-md border">
-                    <div className="p-4">
-                      <h4 className="mb-4 text-sm font-medium leading-none">
-                        items
-                      </h4>
-                      {items.map((item, index) => (
-                        <>
-                          <div key={index} className="flex justify-between">
-                            <p>{item.name}</p>
-                            <p>
-                              {item.value.toLocaleString("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
-                              })}
-                            </p>
-                            <Button
-                              variant="outline"
-                              onClick={() => removeItem(index)}
-                            >
-                              <div>Remover</div>
-                            </Button>
-                          </div>
-                          <Separator className="my-2" />
-                        </>
-                      ))}
-                    </div>
-                  </ScrollArea>
+                  
                   <div className="flex gap-2">
                     <div className="flex gap-2 w-full">
                       <Input
