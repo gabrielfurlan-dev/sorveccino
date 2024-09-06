@@ -58,21 +58,19 @@ export default function NewOrder() {
 
   useEffect(() => {
     const totalRecieved = form.getValues("totalRecieved");
-    
+
     if (!totalRecieved || !total) setTotalChange(0);
     else setTotalChange(totalRecieved - total);
-
   }, [form.watch("totalRecieved")]);
 
   const { mutateAsync: addOrder } = useMutation({
-    
     mutationFn: async (order: NewOrderForm) => {
       const response = await fetch("/api/order/new", {
         method: "POST",
         body: JSON.stringify(order),
       });
 
-      if (!response.ok)  throw new Error("Erro ao adicionar o pedido.");
+      if (!response.ok) throw new Error("Erro ao adicionar o pedido.");
 
       return response.json();
     },
@@ -103,7 +101,6 @@ export default function NewOrder() {
   }
 
   async function onSubmit() {
-    
     if (isLoading) return; // Prevent multiple submissions
 
     setIsLoading(true);
@@ -127,7 +124,6 @@ export default function NewOrder() {
 
       toast.success("Pedido adicionado com sucesso.");
       router.push("/order/all");
-
     } catch (error) {
       toast.error(`Ocorreu um erro ao adicionar o pedido. ${error}`);
     } finally {
@@ -164,7 +160,36 @@ export default function NewOrder() {
                   )}
                 />
                 <div className="py-6 px-2">
-                  
+                  {
+                    //componentizar isso aq
+                    <ScrollArea className="h-72 rounded-md border">
+                      <div className="p-4">
+                        <h4 className="mb-4 text-sm font-medium leading-none">
+                          items
+                        </h4>
+                        {items.map((item, index) => (
+                          <>
+                            <div key={index} className="flex justify-between">
+                              <p>{item.name}</p>
+                              <p>
+                                {item.value.toLocaleString("pt-BR", {
+                                  style: "currency",
+                                  currency: "BRL",
+                                })}
+                              </p>
+                              <Button
+                                variant="outline"
+                                onClick={() => removeItem(index)}
+                              >
+                                <div>Remover</div>
+                              </Button>
+                            </div>
+                            <Separator className="my-2" />
+                          </>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  }
                   <div className="flex gap-2">
                     <div className="flex gap-2 w-full">
                       <Input
