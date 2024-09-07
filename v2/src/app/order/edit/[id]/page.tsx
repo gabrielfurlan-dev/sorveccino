@@ -6,7 +6,6 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Textarea } from "@/components/ui/textarea";
-import { EditFooter } from "../components/footer";
 import { Structure } from "@/components/sorveccino-ui/structure";
 import {
   Form,
@@ -29,9 +28,13 @@ import {
   UpdateOrderCommandSchema,
 } from "@/lib/Backend/Order/Types/Commands/UpdateOrderCommand";
 import { NewOrderForm } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
+import { OrderItemHud } from "../../components/orderItemHud";
+import { Footer } from "../../components/footer";
 
 export default function EditOrder() {
   const [items, setItems] = useState<NewOrderForm["items"]>([]);
+  const [total, setTotal] = useState(0);
+  const [totalChange, setTotalChange] = useState(0);
   const [actualItem, setActualItem] = useState<{
     name?: string;
     value?: number;
@@ -62,7 +65,7 @@ export default function EditOrder() {
       id: order?.id ?? null,
       description: order?.description ?? "",
       total: order?.total ?? 0,
-      totalToRecieve: order?.totalToRecieve ?? 0,
+      totalRecieved: order?.totalToRecieve ?? 0,
       customer: {
         name: order?.customer.name ?? "Cliente Padrão",
         notes: order?.customer.notes ?? "",
@@ -76,7 +79,7 @@ export default function EditOrder() {
         id: order.id ?? null,
         description: order.description ?? "",
         total: order.total ?? 0,
-        totalToRecieve: order.totalToRecieve ?? 0,
+        totalRecieved: order.totalToRecieve ?? 0,
         customer: {
           name: order.customer.name ?? "Cliente Padrão",
           notes: order.customer.notes ?? "",
@@ -106,7 +109,7 @@ export default function EditOrder() {
       await editOrder({
         id: orderId,
         total: values.total,
-        totalToRecieve: values.totalToRecieve,
+        totalRecieved: values.totalRecieved,
         customer: {
           name: values.customer.name,
           notes: values.customer.notes,
@@ -139,7 +142,7 @@ export default function EditOrder() {
                       <FormLabel>Descrição do Pedido</FormLabel>
                       <FormControl>
                         <Textarea
-                          className="min-h-[65vh] resize-none"
+                          className="resize-none"
                           placeholder="Adicione os produtos do seu pedido"
                           {...field}
                         />
@@ -148,6 +151,7 @@ export default function EditOrder() {
                     </FormItem>
                   )}
                 />
+                <OrderItemHud items={items} setItems={setItems} />
               </ResizablePanel>
               <ResizableHandle className="invisible" />
               <ResizablePanel>
@@ -186,11 +190,7 @@ export default function EditOrder() {
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
-          <EditFooter
-            control={form.control}
-            onSubmit={onSubmit}
-            formWatch={form.watch}
-          />
+          <Footer total={total} change={totalChange} control={form.control} onSubmit={onSubmit}  />
         </form>
       </Form>
     </Structure>

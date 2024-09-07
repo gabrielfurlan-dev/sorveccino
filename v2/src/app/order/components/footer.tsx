@@ -7,20 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Control } from "react-hook-form";
 import { NewOrderForm } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
 import { FormField, FormItem } from "@/components/ui/form";
+import { UpdateOrderCommand } from "@/lib/Backend/Order/Types/Commands/UpdateOrderCommand";
 
 type FooterProps = {
   total: number;
-  control: Control<NewOrderForm>;
-  onSubmit: () => void;
   change: number;
+  control: Control<NewOrderForm> | Control<UpdateOrderCommand>;
+  onSubmit: () => void;
 };
 
-export function Footer({
-  total,
-  onSubmit,
-  change,
-  control,
-}: FooterProps) {
+export function Footer({ total, onSubmit, change, control }: FooterProps) {
   const footerButtonsStyle = tv({
     base: "dark:text-white flex items-center justify-center text-black bg-transparent text-[13px] h-[45px] rounded-lg w-[160px] border-2",
     variants: {

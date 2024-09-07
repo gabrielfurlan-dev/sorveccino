@@ -98,7 +98,7 @@ export class OrderRepository implements IOrderRepository {
         description: order.description,
         customer: order.customer,
         total: order.total.toString(),
-        totalToRecieve: order.totalToRecieve.toString(),
+        totalToRecieve: order.totalRecieved.toString(),
       })
       .where(eq(orders.id, order.id ?? ""));
   }
