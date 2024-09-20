@@ -4,19 +4,22 @@ import Link from "next/link";
 import { tv } from "tailwind-variants";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Control } from "react-hook-form";
-import { NewOrderForm } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
-import { FormField, FormItem } from "@/components/ui/form";
-import { UpdateOrderCommand } from "@/lib/Backend/Order/Types/Commands/UpdateOrderCommand";
 
 type FooterProps = {
   total: number;
   change: number;
-  control: Control<NewOrderForm> | Control<UpdateOrderCommand>;
+  totalRecieved: number;
+  setTotalRecieved: (value: number) => void;
   onSubmit: () => void;
 };
 
-export function Footer({ total, onSubmit, change, control }: FooterProps) {
+export function Footer({
+  total,
+  onSubmit,
+  change,
+  totalRecieved,
+  setTotalRecieved,
+}: FooterProps) {
   const footerButtonsStyle = tv({
     base: "dark:text-white flex items-center justify-center text-black bg-transparent text-[13px] h-[45px] rounded-lg w-[160px] border-2",
     variants: {
@@ -40,13 +43,10 @@ export function Footer({ total, onSubmit, change, control }: FooterProps) {
         </div>
         <div className="flex items-center text-xl">
           <Label className="text-xl pr-2">R$</Label>
-
-          <FormField
-            control={control}
-            name="totalRecieved"
-            render={({ field }) => {
-              return <Input {...field} type="number" />;
-            }}
+          <Input
+            onChange={(e) => setTotalRecieved(Number(e.target.value))}
+            value={totalRecieved}
+            type="number"
           />
         </div>
         <div className="flex flex-col items-center text-xl h-[40px]">

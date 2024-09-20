@@ -7,14 +7,6 @@ import {
 } from "@/components/ui/resizable";
 import { Textarea } from "@/components/ui/textarea";
 import { Structure } from "@/components/sorveccino-ui/structure";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -30,9 +22,12 @@ import {
 import { NewOrderForm } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
 import { OrderItemHud } from "../../components/orderItemHud";
 import { Footer } from "../../components/footer";
+import { Label } from "@/components/ui/label";
 
 export default function EditOrder() {
   const [items, setItems] = useState<NewOrderForm["items"]>([]);
+  const [order, setOrder] = useState<UpdateOrderCommand>();
+
   const [total, setTotal] = useState(0);
   const [totalChange, setTotalChange] = useState(0);
   const [actualItem, setActualItem] = useState<{
@@ -45,7 +40,7 @@ export default function EditOrder() {
   const orderId = Array.isArray(id) ? id[0] : id;
 
   const {
-    data: order,
+    data: orderData,
     isLoading,
     isError,
   } = useQuery({
@@ -56,38 +51,39 @@ export default function EditOrder() {
 
   async function Get(id: string) {
     const res = await fetch(`/api/order/${id}`, { method: "GET" });
-    return res.json().then((data) => data.data);
+    setOrder(await res.json());
+    // res.json().then((data) => data.data);
   }
 
-  const form = useForm<UpdateOrderCommand>({
-    resolver: zodResolver(UpdateOrderCommandSchema),
-    defaultValues: {
-      id: order?.id ?? null,
-      description: order?.description ?? "",
-      total: order?.total ?? 0,
-      totalRecieved: order?.totalToRecieve ?? 0,
-      customer: {
-        name: order?.customer.name ?? "Cliente Padrão",
-        notes: order?.customer.notes ?? "",
-      },
-    },
-  });
+  // const form = useForm<UpdateOrderCommand>({
+  //   resolver: zodResolver(UpdateOrderCommandSchema),
+  //   defaultValues: {
+  //     id: order?.id ?? null,
+  //     description: order?.description ?? "",
+  //     total: order?.total ?? 0,
+  //     totalRecieved: order?.totalToRecieve ?? 0,
+  //     customer: {
+  //       name: order?.customer.name ?? "Cliente Padrão",
+  //       notes: order?.customer.notes ?? "",
+  //     },
+  //   },
+  // });
 
-  useEffect(() => {
-    if (order) {
-      form.reset({
-        id: order.id ?? null,
-        description: order.description ?? "",
-        total: order.total ?? 0,
-        totalRecieved: order.totalToRecieve ?? 0,
-        customer: {
-          name: order.customer.name ?? "Cliente Padrão",
-          notes: order.customer.notes ?? "",
-        },
-      });
-    }
-    setItems(order?.items ?? []);
-  }, [order, form]);
+  // useEffect(() => {
+  // if (order) {
+  //   form.reset({
+  //     id: order.id ?? null,
+  //     description: order.description ?? "",
+  //     total: order.total ?? 0,
+  //     totalRecieved: order.totalToRecieve ?? 0,
+  //     customer: {
+  //       name: order.customer.name ?? "Cliente Padrão",
+  //       notes: order.customer.notes ?? "",
+  //     },
+  //   });
+  // }
+  // setItems(order?.items ?? []);
+  // }, [order]);
 
   const { mutateAsync: editOrder } = useMutation({
     mutationFn: updateOrder,
@@ -105,16 +101,23 @@ export default function EditOrder() {
 
   async function onSubmit() {
     try {
-      const values = form.getValues();
+      if (!UpdateOrderCommandSchema.safeParse(order)) {
+        toast.error(
+          "Ocorreu um erro ao atualizar o pedido. Nem todos os campos estão preenchidos."
+        );
+        return;
+      }
+
+      // const values = form.getValues();
       await editOrder({
         id: orderId,
-        total: values.total,
-        totalRecieved: values.totalRecieved,
+        total: order.total,
+        totalRecieved: order.totalRecieved,
         customer: {
-          name: values.customer.name,
-          notes: values.customer.notes,
+          name: order.customer.name,
+          notes: order.customer.notes,
         },
-        description: values.description,
+        description: order.description,
         items: items,
       });
       toast.success("Pedido atualizado com sucesso.");
@@ -129,70 +132,86 @@ export default function EditOrder() {
 
   return (
     <Structure>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="px-20 h-[80vh]">
-            <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel>
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Descrição do Pedido</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          className="resize-none"
-                          placeholder="Adicione os produtos do seu pedido"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <OrderItemHud items={items} setItems={setItems} />
-              </ResizablePanel>
-              <ResizableHandle className="invisible" />
-              <ResizablePanel>
-                <h1 className="text-xl">Dados Pessoais</h1>
-                <div className="py-6 px-2">
-                  <FormField
-                    control={form.control}
-                    name="customer.name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nome do Cliente</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Cliente Padrão" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="customer.notes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Observações</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Adicione o endereço do cliente e a forma de pagamento"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+      <div className="px-20 h-[80vh]">
+        <ResizablePanelGroup direction="horizontal">
+          <ResizablePanel className="">
+            <div>
+              <div>
+                <p className="text-xl">Descrição do Pedido</p>
+                <div className="px-2">
+                  <div>
+                    <Textarea
+                      className=""
+                      placeholder="Adicione os produtos do seu pedido"
+                      onChange={(e) => {
+                        setOrder({ ...order, description: e.target.value });
+                      }}
+                      value={order.description ?? ""}
+                    />
+                  </div>
+                  <div />
                 </div>
-              </ResizablePanel>
-            </ResizablePanelGroup>
-          </div>
-          <Footer total={total} change={totalChange} control={form.control} onSubmit={onSubmit}  />
-        </form>
-      </Form>
+              </div>
+            </div>
+            <OrderItemHud items={items} setItems={setItems} />
+          </ResizablePanel>
+          <ResizableHandle className="invisible" />
+          <ResizablePanel>
+            <p className="text-xl">Dados Pessoais</p>
+            <div className="py-6 px-2">
+              <div>
+                <div>
+                  <p>Nome do Cliente</p>
+                  <div>
+                    <Input
+                      placeholder="Cliente Padrão"
+                      onChange={(e) => {
+                        setOrder({
+                          ...order,
+                          customer: {
+                            ...order.customer,
+                            name: e.target.value,
+                          },
+                        });
+                      }}
+                      value={order.customer.name ?? ""}
+                    />
+                  </div>
+                  <div />
+                </div>
+              </div>
+              <div>
+                <div>
+                  <p>Observações</p>
+                  <div>
+                    <Textarea
+                      placeholder="Adicione o endereço do cliente e a forma de pagamento"
+                      onChange={(e) => {
+                        setOrder({
+                          ...order,
+                          customer: {
+                            ...order.customer,
+                            notes: e.target.value,
+                          },
+                        });
+                      }}
+                      value={order.customer.notes ?? ""}
+                    />
+                  </div>
+                  <div />
+                </div>
+              </div>
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+      <Footer
+        total={order.total}
+        change={order.totalChange}
+        onSubmit={onSubmit}
+        totalRecieved={order.totalRecieved}
+        setTotalRecieved={setTotalRecieved}
+      />
     </Structure>
   );
 }
