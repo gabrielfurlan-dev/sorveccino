@@ -7,8 +7,6 @@ import {
 } from "@/components/ui/resizable";
 import { Textarea } from "@/components/ui/textarea";
 import { Structure } from "@/components/sorveccino-ui/structure";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/lib/utils/reactQuery";
@@ -22,11 +20,10 @@ import {
 import { NewOrderForm } from "@/lib/Backend/Order/Types/Commands/NewOrderForm";
 import { OrderItemHud } from "../../components/orderItemHud";
 import { Footer } from "../../components/footer";
-import { Label } from "@/components/ui/label";
 
 export default function EditOrder() {
   const [items, setItems] = useState<NewOrderForm["items"]>([]);
-  const [order, setOrder] = useState<UpdateOrderCommand>();
+
 
   const [total, setTotal] = useState(0);
   const [totalChange, setTotalChange] = useState(0);
@@ -34,6 +31,7 @@ export default function EditOrder() {
     name?: string;
     value?: number;
   }>({});
+
   const router = useRouter();
   const { id } = useParams();
 
@@ -48,42 +46,40 @@ export default function EditOrder() {
     queryFn: () => Get(orderId),
     enabled: !!orderId,
   });
+  const [order, setOrder] = useState<UpdateOrderCommand>({
+    id: "",
+    total: 0,
+    totalRecieved: 0,
+    customer: {
+      name: "",
+      notes: "",
+    },
+    description: "",
+    items: [],
+    totalChange: 0,
+  });
 
   async function Get(id: string) {
     const res = await fetch(`/api/order/${id}`, { method: "GET" });
-    setOrder(await res.json());
-    // res.json().then((data) => data.data);
+    const data = await res.json() as UpdateOrderCommand;
+    
+    alert("DATA: " + JSON.stringify(data))
+    setOrder({
+      id: data.id,
+      total: data.total,
+      totalRecieved: data.totalRecieved,
+      customer: {
+        name: data.customer.name,
+        notes: data.customer.notes,
+      },
+      description: data.description,
+      items: data.items,
+      totalChange: data.totalChange,
+    });
+    alert("ORDER: " + JSON.stringify(order))
+    
+    return data;
   }
-
-  // const form = useForm<UpdateOrderCommand>({
-  //   resolver: zodResolver(UpdateOrderCommandSchema),
-  //   defaultValues: {
-  //     id: order?.id ?? null,
-  //     description: order?.description ?? "",
-  //     total: order?.total ?? 0,
-  //     totalRecieved: order?.totalToRecieve ?? 0,
-  //     customer: {
-  //       name: order?.customer.name ?? "Cliente Padrão",
-  //       notes: order?.customer.notes ?? "",
-  //     },
-  //   },
-  // });
-
-  // useEffect(() => {
-  // if (order) {
-  //   form.reset({
-  //     id: order.id ?? null,
-  //     description: order.description ?? "",
-  //     total: order.total ?? 0,
-  //     totalRecieved: order.totalToRecieve ?? 0,
-  //     customer: {
-  //       name: order.customer.name ?? "Cliente Padrão",
-  //       notes: order.customer.notes ?? "",
-  //     },
-  //   });
-  // }
-  // setItems(order?.items ?? []);
-  // }, [order]);
 
   const { mutateAsync: editOrder } = useMutation({
     mutationFn: updateOrder,
@@ -101,14 +97,13 @@ export default function EditOrder() {
 
   async function onSubmit() {
     try {
-      if (!UpdateOrderCommandSchema.safeParse(order)) {
+      if (!UpdateOrderCommandSchema.safeParse(order) || !order) {
         toast.error(
           "Ocorreu um erro ao atualizar o pedido. Nem todos os campos estão preenchidos."
         );
         return;
       }
 
-      // const values = form.getValues();
       await editOrder({
         id: orderId,
         total: order.total,
@@ -119,12 +114,17 @@ export default function EditOrder() {
         },
         description: order.description,
         items: items,
+        totalChange: order.totalChange,
       });
       toast.success("Pedido atualizado com sucesso.");
       router.push("/order/all");
     } catch (error) {
       toast.error("Ocorreu um erro ao atualizar o pedido.");
     }
+  }
+
+  function setTotalRecieved(value: number) {
+    setOrder({ ...order, totalRecieved: value });
   }
 
   if (isLoading) return <p>Carregando...</p>;
@@ -170,7 +170,7 @@ export default function EditOrder() {
                           ...order,
                           customer: {
                             ...order.customer,
-                            name: e.target.value,
+                            name: e.target.value ?? "",
                           },
                         });
                       }}

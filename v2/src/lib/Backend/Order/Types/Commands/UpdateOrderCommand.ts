@@ -14,7 +14,8 @@ export const UpdateOrderCommandSchema = z.object({
       name: z.string(),
       value: z.coerce.number(),
     })
-  )
+  ),
+  totalChange: z.coerce.number(),
 });
 
 export type UpdateOrderCommand = z.infer<typeof UpdateOrderCommandSchema>;
