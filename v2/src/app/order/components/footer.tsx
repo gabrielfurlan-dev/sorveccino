@@ -51,7 +51,7 @@ export function Footer({
         </div>
         <div className="flex flex-col items-center text-xl h-[40px]">
           <Label className="text-xl pr-2">Troco</Label>
-          <p className="text-xl">{`R$ ${change.toFixed(2)}`}</p>
+          <p className="text-xl">{`R$ ${change ? change.toFixed(2) : "00,00"}`}</p>
         </div>
       </div>
       <div className="flex gap-x-4 ml-auto">

@@ -24,7 +24,7 @@ import { Footer } from "../../components/footer";
 export default function EditOrder() {
   const [items, setItems] = useState<NewOrderForm["items"]>([]);
 
-
+  const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [totalChange, setTotalChange] = useState(0);
   const [actualItem, setActualItem] = useState<{
@@ -37,15 +37,12 @@ export default function EditOrder() {
 
   const orderId = Array.isArray(id) ? id[0] : id;
 
-  const {
-    data: orderData,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["order", orderId],
-    queryFn: () => Get(orderId),
-    enabled: !!orderId,
-  });
+  useEffect(() => {
+    if (orderId) {
+      Get(orderId);
+    }
+  }, [orderId]);
+
   const [order, setOrder] = useState<UpdateOrderCommand>({
     id: "",
     total: 0,
@@ -60,25 +57,35 @@ export default function EditOrder() {
   });
 
   async function Get(id: string) {
+    setIsLoading(true);
     const res = await fetch(`/api/order/${id}`, { method: "GET" });
-    const data = await res.json() as UpdateOrderCommand;
-    
-    alert("DATA: " + JSON.stringify(data))
+    const data = (await res.json()) as UpdateOrderCommand;
+
+    if (!UpdateOrderCommandSchema.safeParse(data)) {
+      toast.error(
+        "Ocorreu um erro ao buscar o pedido. Nem todos os campos estão preenchidos."
+      );
+      return;
+    }
+
     setOrder({
       id: data.id,
       total: data.total,
       totalRecieved: data.totalRecieved,
       customer: {
-        name: data.customer.name,
-        notes: data.customer.notes,
+        name: data.customer?.name ?? "",
+        notes: data.customer?.notes,
       },
       description: data.description,
       items: data.items,
       totalChange: data.totalChange,
     });
-    alert("ORDER: " + JSON.stringify(order))
-    
-    return data;
+
+    setItems(data.items);
+    setTotal(data.total);
+    setTotalChange(data.totalChange);
+
+    setIsLoading(false);
   }
 
   const { mutateAsync: editOrder } = useMutation({
@@ -128,8 +135,6 @@ export default function EditOrder() {
   }
 
   if (isLoading) return <p>Carregando...</p>;
-  if (isError) return <p>Erro ao carregar o pedido.</p>;
-
   return (
     <Structure>
       <div className="px-20 h-[80vh]">
