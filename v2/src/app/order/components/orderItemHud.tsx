@@ -39,7 +39,7 @@ export function OrderItemHud({ items, setItems }: OrderItemHudProps) {
       <ScrollArea className="h-72 rounded-md border">
         <div className="p-4">
           <h4 className="mb-4 text-sm font-medium leading-none">items</h4>
-          {items.map((item, index) => (
+          {items && items.map((item, index) => (
             <>
               <div key={index} className="flex justify-between">
                 <p>{item.name}</p>
