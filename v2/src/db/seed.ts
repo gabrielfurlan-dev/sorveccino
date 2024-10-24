@@ -8,7 +8,7 @@ import { orders } from "./schemas";
 const [order] = await db.insert(orders).values({
     description: "Açai de nutella com morango",
     total: "21.75",
-    totalToRecieve: "16.75",
+    totalRecieved: "16.75",
     customer: {
         name: "Cristiano Rosinaldo",
         notes: "Siiiuuu"

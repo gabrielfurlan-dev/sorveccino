@@ -32,7 +32,7 @@ export default function AllOrders() {
   useEffect(() => {
     if (!orders?.length) return;
     setTotal(
-      orders?.reduce((acc, order) => acc + order.totalToRecieve, 0) ?? 0
+      orders?.reduce((acc, order) => acc + order.totalRecieved, 0) ?? 0
     );
   }, [orders]);
 
@@ -94,7 +94,7 @@ export default function AllOrders() {
                       {formatCurrency(order.total)}
                     </TableCell>
                     <TableCell className="text-start">
-                      {formatCurrency(order.totalToRecieve)}
+                      {formatCurrency(order.totalRecieved)}
                     </TableCell>
                     <TableCell className="text-center flex gap-2 justify-center">
                       <Link

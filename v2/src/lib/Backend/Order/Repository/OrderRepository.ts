@@ -18,7 +18,7 @@ export class OrderRepository implements IOrderRepository {
       description: order.description,
       customer: order.customer,
       total: order.total.toString(),
-      totalToRecieve: (order.total - (order.totalRecieved ?? 0)).toString(),
+      totalRecieved: order.totalRecieved.toString(),
       items: JSON.stringify(order.items),
     });
   }
@@ -29,7 +29,7 @@ export class OrderRepository implements IOrderRepository {
         description: orders.description,
         total: orders.total,
         createdAt: orders.createdAt,
-        totalToRecieve: orders.totalToRecieve,
+        totalRecieved: orders.totalRecieved,
         customer: orders.customer,
         items: orders.items
       })
@@ -48,7 +48,7 @@ export class OrderRepository implements IOrderRepository {
       },
       items: JSON.parse(order.items as string),
       total: Number(order.total),
-      totalToRecieve: Number(order.totalToRecieve),
+      totalRecieved: Number(order.totalRecieved),
     } satisfies Order;
   }
 
@@ -62,7 +62,7 @@ export class OrderRepository implements IOrderRepository {
         description: orders.description,
         total: orders.total,
         createdAt: orders.createdAt,
-        totalToRecieve: orders.totalToRecieve,
+        totalRecieved: orders.totalRecieved,
         customer: orders.customer,
         items: orders.items
       })
@@ -85,7 +85,7 @@ export class OrderRepository implements IOrderRepository {
               ?.notes ?? "",
         },
         total: Number(order.total),
-        totalToRecieve: Number(order.totalToRecieve),
+        totalRecieved: Number(order.totalRecieved),
         items: JSON.parse(order.items as string),
       } satisfies Order;
     });
@@ -98,7 +98,7 @@ export class OrderRepository implements IOrderRepository {
         description: order.description,
         customer: order.customer,
         total: order.total.toString(),
-        totalToRecieve: order.totalRecieved.toString(),
+        totalRecieved: order.totalRecieved.toString(),
       })
       .where(eq(orders.id, order.id ?? ""));
   }

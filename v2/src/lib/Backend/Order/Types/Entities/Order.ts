@@ -5,7 +5,7 @@ export const OrderSchema = z.object({
   createdAt: z.date(),
   description: z.string(),
   total: z.number(),
-  totalToRecieve: z.number(),
+  totalRecieved: z.number(),
   customer: z.object({
     name: z.string(),
     notes: z.string(),

@@ -7,7 +7,7 @@ export const orders = pgTable("orders", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(), 
   description: text("description"),
   total: numeric("total"),
-  totalToRecieve: numeric("totalToRecieve"),
+  totalRecieved: numeric("totalRecieved"),
   customer: jsonb("customer"),
   items: jsonb("items"),
 });

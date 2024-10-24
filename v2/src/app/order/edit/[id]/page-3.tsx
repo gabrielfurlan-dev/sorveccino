@@ -10,7 +10,7 @@ export default function EditOrder() {
   const defaultValue: UpdateOrderCommand = {
     id: "",
     total: 0,
-    totalToRecieve: 0,
+    totalRecieved: 0,
     customer: {
       name: "",
       notes: "",
@@ -50,7 +50,7 @@ export default function EditOrder() {
           Totais:
           <div>
             {order.total}
-            {order.totalToRecieve}
+            {order.totalRecieved}
           </div>
         </div>
       )}

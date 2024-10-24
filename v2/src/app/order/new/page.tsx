@@ -31,8 +31,7 @@ export default function NewOrder() {
     },
     description: "",
     troco: 0,
-    items: [],
-    totalChange: 0,
+    items: []
   });
   const [items, setItems] = useState<NewOrderForm["items"]>([]);
   
@@ -45,10 +44,7 @@ export default function NewOrder() {
   }, [items]);
 
   useEffect(() => {
-    // const totalRecieved = totalToRecieve;
-    // if (!order.totalRecieved || !order.total) setTotalChange(0);
-    // (totalRecieved - total);
-    setOrder({ ...order, totalChange: order.total - order.totalRecieved });
+    setOrder({ ...order,  totalRecieved: order.totalRecieved });
   }, [order.totalRecieved]);
 
   const { mutateAsync: addOrder } = useMutation({
@@ -73,21 +69,18 @@ export default function NewOrder() {
   }
 
   async function onSubmit() {
-    if (isLoading) return; // Prevent multiple submissions
-
+    
+    if (isLoading) return; 
+    
     setIsLoading(true);
- 
+    
     if (!NewOrderFormSchema.safeParse(order)) {
-      toast.error(
-        "Ocorreu um erro ao adicionar o pedido. Nem todos os campos estão preenchidos."
-      );
+      toast.error("Ocorreu um erro ao adicionar o pedido. Nem todos os campos estão preenchidos.");
       setIsLoading(false);
       return;
     }
 
     try {
-      // const values = form.getValues();
-
       if (!NewOrderFormSchema.parse(order)) return;
 
       await addOrder({
@@ -99,8 +92,7 @@ export default function NewOrder() {
         },
         description: order.description,
         troco: order.troco,
-        items: order.items,
-        totalChange: order.totalChange,
+        items: order.items
       });
 
       toast.success("Pedido adicionado com sucesso.");
@@ -189,7 +181,7 @@ export default function NewOrder() {
       </div>
       <Footer
         total={order.total}
-        change={order.totalChange}
+        change={order.total - order.totalRecieved}
         onSubmit={onSubmit}
         totalRecieved={order.totalRecieved}
         setTotalRecieved={setTotalRecieved}

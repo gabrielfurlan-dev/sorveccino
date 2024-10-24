@@ -34,14 +34,13 @@ export default function EditOrder() {
   const [order, setOrder] = useState<UpdateOrderCommand>({
     id: "",
     total: 0,
-    totalToRecieve: 0,
+    totalRecieved: 0,
     customer: {
       name: "",
       notes: "",
     },
     description: "",
-    items: [],
-    totalChange: 0,
+    items: []
   });
 
   const router = useRouter();
@@ -52,7 +51,6 @@ export default function EditOrder() {
   useEffect(() => {
     if (order.id !== "") return;
     if (!orderId) return;
-    // alert(orderId);
     Get(orderId);
   }, [orderId]);
 
@@ -61,8 +59,6 @@ export default function EditOrder() {
     
     const res = await fetch(`/api/order/${id}`, { method: "GET" });
     const data = (await res.json()).data;
-    
-    // const order = data.data as UpdateOrderCommand;
 
     if (!UpdateOrderCommandSchema.safeParse(data)) {
       toast.error(
@@ -71,25 +67,23 @@ export default function EditOrder() {
       return;
     }
 
-    alert(JSON.stringify(data))
-
     setOrder({
       id: data.id,
       total: data.total,
-      totalToRecieve: data.totalToRecieve,
+      totalRecieved: data.totalRecieved,
       customer: {
         name: data.customer?.name ?? "",
         notes: data.customer?.notes,
       },
       description: data.description,
-      items: data.items,
-      totalChange: data.totalChange,
+      items: data.items
     });
 
-    setItems(order.items);
-    setTotal(order.total);
-    setTotalChange(order.totalChange);
-    
+    alert(JSON.stringify(data))
+    setItems(data.items);
+    setTotal(data.total);
+    // setTotalRecieved(data.)
+    setTotalChange(data.totalChange);
     setIsLoading(false);
   }
 
@@ -119,14 +113,13 @@ export default function EditOrder() {
       await editOrder({
         id: orderId,
         total: order.total,
-        totalToRecieve: order.totalToRecieve,
+        totalRecieved: order.totalRecieved,
         customer: {
           name: order.customer.name,
           notes: order.customer.notes,
         },
         description: order.description,
-        items: items,
-        totalChange: order.totalChange,
+        items: items
       });
       toast.success("Pedido atualizado com sucesso.");
       router.push("/order/all");
@@ -136,7 +129,7 @@ export default function EditOrder() {
   }
 
   function setTotalRecieved(value: number) {
-    setOrder({ ...order, totalToRecieve: value });
+    setOrder({ ...order, totalRecieved: value });
   }
 
   if (isLoading) return <p>Carregando...</p>;
@@ -217,9 +210,9 @@ export default function EditOrder() {
       </div>
       <Footer
         total={order.total}
-        change={order.totalChange}
+        change={order.total - order.totalRecieved}
         onSubmit={onSubmit}
-        totalRecieved={order.totalToRecieve}
+        totalRecieved={order.totalRecieved}
         setTotalRecieved={setTotalRecieved}
       />
     </Structure>

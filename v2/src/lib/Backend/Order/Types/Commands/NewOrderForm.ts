@@ -4,7 +4,6 @@ export const NewOrderFormSchema = z.object({
   description: z.string().min(1),
   total: z.coerce.number().default(0),
   totalRecieved: z.coerce.number().default(0),
-  totalChange: z.coerce.number().default(0),
   customer: z.object({
     name: z.string().min(1),
     notes: z.string().min(1),
