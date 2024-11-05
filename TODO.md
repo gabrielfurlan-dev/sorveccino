@@ -1,7 +1,12 @@
 ## Refatorar
 - Use cases
     - [x] Add Order
-    - [ ] Get Order
-    - [ ] Update Order
-    - [ ] Delete Order
-    - [ ] Get Orders
+    - [x] Get Order
+    - [x] Update Order
+    - [x] Delete Order
+    - [x] Get Orders
+- tests
+  - The integration tests are not working as expected.
+  - The tests runs, but:
+    -  when the update test is executed, another order is created instead of updating the existing one.
+    -  when the delete test is executed, none order is deleted.

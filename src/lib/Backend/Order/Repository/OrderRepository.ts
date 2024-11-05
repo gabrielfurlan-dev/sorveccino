@@ -30,7 +30,7 @@ export class OrderRepository implements IOrderRepository {
   }
   
   async get(id: string): Promise<Order> {
-    const data = await db
+    const [order] = await db
       .select({
         id: orders.id,
         description: orders.description,
@@ -43,12 +43,11 @@ export class OrderRepository implements IOrderRepository {
       .from(orders)
       .where(eq(orders.id, id));
 
-    const order = data[0];
     const customer = order.customer as any;
     return {
       id: order.id,
       createdAt: order.createdAt,
-      description: order.description ?? "",
+      description: order.description,
       customer: {
         name: customer.name,
         notes: customer.notes,
@@ -98,18 +97,47 @@ export class OrderRepository implements IOrderRepository {
     });
   }
 
-  async update(order: UpdateOrderCommand): Promise<void> {
-    await db
+  async update(order: UpdateOrderCommand): Promise<Order> {
+    const [result] = await db
       .update(orders)
       .set({
         description: order.description,
         customer: order.customer,
         total: order.total.toString(),
         totalRecieved: order.totalRecieved.toString(),
+        items: JSON.stringify(order.items)
       })
-      .where(eq(orders.id, order.id ?? ""));
+      .where(eq(orders.id, order.id))
+      .returning({
+        id: orders.id,
+        createdAt: orders.createdAt,
+        description: orders.description,
+        customer: orders.customer,
+        total: orders.total,
+        totalRecieved: orders.totalRecieved,
+        items: orders.items
+      });
+
+    if (!result) {
+      throw new Error("Order not found");
+    }
+
+    return {
+      id: result.id,
+      createdAt: result.createdAt,
+      description: result.description,
+      customer: result.customer as { name: string, notes: string },
+      total: Number(result.total),
+      totalRecieved: Number(result.totalRecieved),
+      items: JSON.parse(result.items as string),
+    };
   }
-  async delete(id: string): Promise<void> {
-    await db.delete(orders).where(eq(orders.id, id));
+  async delete(id: string): Promise<string> {
+    const [result] = await db
+    .delete(orders)
+    .where(eq(orders.id, id))
+    .returning({id: orders.id});
+
+    return result.id;
   }
 }

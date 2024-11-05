@@ -7,6 +7,6 @@ export interface IOrderRepository {
   add(order: NewOrderForm): Promise<string>;
   get(id: string): Promise<Order>;
   getAll({startDate, endDate}:getAllProps): Promise<Order[]>;
-  update(order: UpdateOrderCommand): Promise<void>;
-  delete(id: string): Promise<void>;
+  update(order: UpdateOrderCommand): Promise<Order>;
+  delete(id: string): Promise<string>;
 }

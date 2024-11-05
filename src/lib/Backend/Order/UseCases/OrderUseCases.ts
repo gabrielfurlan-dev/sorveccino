@@ -26,8 +26,8 @@ export async function Get(id: string): Promise<ICommandResult> {
 
 export async function Update(order: UpdateOrderCommand): Promise<ICommandResult> {
   try {
-    await repo.update(order);
-    return { success: true, message: "Order updated" };
+    const updatedOrder = await repo.update(order);
+    return { success: true, message: "Order updated", data: updatedOrder };
   } catch (error) {
     return { success: false, message: (error as Error).message };
   }
@@ -35,8 +35,8 @@ export async function Update(order: UpdateOrderCommand): Promise<ICommandResult>
 
 export async function Delete(id: string): Promise<ICommandResult> {
   try {
-    await repo.delete(id);
-    return { success: true, message: "Order deleted" };
+    const deletedId = await repo.delete(id);
+    return { success: true, message: "Order deleted", data: deletedId };
   } catch (error) {
     return { success: false, message: (error as Error).message };
   }
