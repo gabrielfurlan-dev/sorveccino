@@ -13,15 +13,22 @@ export type getAllProps = {
 };
 
 export class OrderRepository implements IOrderRepository {
-  async add(order: NewOrderForm): Promise<void> {
-    await db.insert(orders).values({
+
+  async add(order: NewOrderForm): Promise<string> {
+    const [result] = await db
+    .insert(orders)
+    .values({
       description: order.description,
       customer: order.customer,
       total: order.total.toString(),
       totalRecieved: order.totalRecieved.toString(),
       items: JSON.stringify(order.items),
-    });
+    })
+    .returning({ id: orders.id});
+
+    return result.id;
   }
+  
   async get(id: string): Promise<Order> {
     const data = await db
       .select({

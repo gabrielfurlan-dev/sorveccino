@@ -1,48 +1,29 @@
-// import { GetOrdersUseCase } from "../src/lib/orders/useCases/GetOrdersUseCase";
-// import { describe, expect } from "bun:test";
-// import { AddOrderCommand } from "@/lib/orders/commands/AddOrderCommand";
-// import { AddOrderUseCase } from "@/lib/orders/useCases/AddOrderUseCase";
-// import { Order } from "@/lib/orders/types/Order";
-// import { GetOrderByIdUseCase } from "@/lib/orders/useCases/GetOrderByIdUseCase";
-// import { UpdateStatusOrderUseCase } from "@/lib/orders/useCases/UpdateStatusOrderUseCase";
-// import { RemoveOrderUseCase } from "@/lib/orders/useCases/RemoveOrderUseCase";
+import { NewOrderForm } from '@/lib/Backend/Order/Types/Commands/NewOrderForm';
+import { New } from '@/lib/Backend/Order/UseCases/OrderUseCases';
+import { describe, expect } from "bun:test";
 
-// describe("INTEGRATION - Should add Order", async () => {
-//   const order: AddOrderCommand = {
-//     customerId: "wo91d9ww31dyyskpbja1cva0",
-//     acais: [
-//       {
-//         sale: null,
-//         packaging: {
-//           category: "acai",
-//           description: "Copo",
-//           price: 10,
-//         },
-//         aditionals: [
-//           {
-//             name: "Morango",
-//             category: "Frutas",
-//             price: 4,
-//           },
-//           {
-//             name: "Creme de Ninho",
-//             category: "Cremes",
-//             price: 4,
-//           },
-//         ],
-//         notes: "",
-//       },
-//     ],
-//     discountCode: "",
-//     total: 18,
-//     status: "pending",
-//   };
+describe("INTEGRATION - Should add Order", async () => {
+  const order: NewOrderForm = {
+    customer: 
+    {
+        name: "João da Silva",
+        notes: "Sem cebola",
+    },
+    items: [
+      {
+        name: "Açaí",
+        value: 10,
+      },
+    ],
+    total: 10,
+    totalRecieved: 20,
+    description: "Pedido de João da Silva",
+  };
 
-//   // const addOrder = new AddOrderUseCase();
-//   // const result = await addOrder.execute(order);
-//   // console.log(result);
-//   // expect(result.success).toBe(true);
-// });
+  const result = await New(order);
+  expect(result.success).toBe(true);
+  expect(result.data).not.toBeEmpty();
+});
 
 // describe("INTEGRATION - Should get orders", async () => {
 //   // const useCase = new GetOrdersUseCase();
