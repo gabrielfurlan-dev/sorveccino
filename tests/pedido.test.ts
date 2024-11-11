@@ -20,18 +20,12 @@ describe("INTEGRATION - Operações de Pedido", () => {
     totalRecieved: 20,
     description: "Pedido de João da Silva",
   };
-
-  beforeAll(async () => {
-    const createResult = await New(newOrder);
-    expect(createResult.success).toBe(true);
-    expect(createResult.data).not.toBeEmpty();
-    orderId = createResult.data;
-  });
-
+ 
   test("Deve criar um novo pedido", async () => {
     const createResult = await New(newOrder);
     expect(createResult.success).toBe(true);
     expect(createResult.data).not.toBeEmpty();
+    orderId = createResult.data;
   });
 
   test("Deve obter um pedido existente", async () => {
@@ -75,7 +69,7 @@ describe("INTEGRATION - Operações de Pedido", () => {
     expect(updateResult.data.totalRecieved).toBe(updateOrder.totalRecieved);
   });
 
-  afterAll(async () => {
+  test("Deve deletar o pedido", async () => {
     const deleteResult = await Delete(orderId);
     expect(deleteResult.success).toBe(true);
     expect(deleteResult.data).toBe(orderId);
