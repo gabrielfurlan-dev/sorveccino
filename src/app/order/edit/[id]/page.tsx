@@ -79,13 +79,23 @@ export default function EditOrder() {
       items: data.items
     });
 
-    alert(JSON.stringify(data))
     setItems(data.items);
     setTotal(data.total);
-    // setTotalRecieved(data.)
     setTotalChange(data.totalChange);
     setIsLoading(false);
   }
+
+  useEffect(() => {
+    setOrder({
+      ...order,
+      items: items,
+      total: items.reduce((a, b) => a + b.value, 0),
+    });
+  }, [items]);
+
+  useEffect(() => {
+    setOrder({ ...order,  totalRecieved: order.totalRecieved });
+  }, [order.totalRecieved]);
 
   const { mutateAsync: editOrder } = useMutation({
     mutationFn: updateOrder,

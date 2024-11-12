@@ -11,11 +11,11 @@ export async function GET(req: Request, context: any) {
         message: "Missing id",
       });
 
-    const data = await Get(id);
+    const order = await Get(id);
 
     return NextResponse.json({
       success: true,
-      data: data,
+      data: order.data,
       message: `Order "${id}" found.`,
     });
 

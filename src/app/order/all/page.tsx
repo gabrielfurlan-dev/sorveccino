@@ -18,9 +18,11 @@ import { useEffect, useState } from "react";
 import { Order } from "@/lib/Backend/Order/Types/Entities/Order";
 
 export default function AllOrders() {
+  
   async function getAll(): Promise<Order[]> {
     const res = await fetch("/api/order/get-all", { method: "GET" });
-    return res.json().then((data) => data.data);
+    const orders =  await res.json();
+    return orders.data
   }
 
   const [total, setTotal] = useState(0);

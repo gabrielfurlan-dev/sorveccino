@@ -30,7 +30,6 @@ export default function NewOrder() {
       notes: "",
     },
     description: "",
-    troco: 0,
     items: []
   });
   const [items, setItems] = useState<NewOrderForm["items"]>([]);
@@ -91,7 +90,6 @@ export default function NewOrder() {
           notes: order.customer.notes,
         },
         description: order.description,
-        troco: order.troco,
         items: order.items
       });
 
